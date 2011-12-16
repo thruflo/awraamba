@@ -11,7 +11,7 @@ from commands import getoutput
 from os.path import dirname, exists, join as join_path
 here = dirname(__file__)
 
-src_folder = join_path(here, 'src', 'spaces')
+src_folder = join_path(here, 'src', 'awraamba')
 i18n_folder = join_path(here, 'build', 'i18n')
 
 from bolt.api import *
@@ -25,7 +25,7 @@ def compile():
     require('babel')
     
     d = '--directory %s' % i18n_folder
-    local('pybabel compile --domain=spaces %s --use-fuzzy' % d)
+    local('pybabel compile --domain=awraamba %s --use-fuzzy' % d)
     
 
 
@@ -43,11 +43,11 @@ def extract():
     infile = '--input-file=%s' % pot_file
     outdir = '--output-dir=%s' % i18n_folder
     for item in languages:
-        path = join_path(i18n_folder, item, 'LC_MESSAGES', 'spaces.po')
+        path = join_path(i18n_folder, item, 'LC_MESSAGES', 'awraamba.po')
         if not exists(path):
             loc = '--locale=%s' % item
-            local('pybabel init --domain=spaces %s %s %s' % (infile, outdir, loc))
-        local('pybabel update --domain=spaces %s %s' % (infile, outdir))
+            local('pybabel init --domain=awraamba %s %s %s' % (infile, outdir, loc))
+        local('pybabel update --domain=awraamba %s %s' % (infile, outdir))
     
     import babel.messages.extract
     import json 

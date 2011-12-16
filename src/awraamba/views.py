@@ -199,7 +199,7 @@ class RequestHandler(BaseRequestHandler):
                 target = item
                 break
         translation = gettext.translation(
-            'spaces',
+            'awraamba',
             localedir=localedir, 
             languages=[target]
         )
