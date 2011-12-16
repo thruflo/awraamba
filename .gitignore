@@ -1,0 +1,10 @@
+*.pyc
+.DS_Store
+.Python
+bin/
+build/
+etc/.sass-cache/
+include/
+lib/
+src/awraamba.egg-info
+var/
