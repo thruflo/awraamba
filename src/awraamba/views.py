@@ -481,19 +481,10 @@ class Index(RequestHandler):
 #    
 #
 #
+
 # XXX put this somewhere more obviously configurable.
 STATIC_URLS = (
-    #'gfx/icons/111-user.png',
-    'gfx/icons/117-todo.png',
-    'gfx/icons/74-location.png',
-    'gfx/icons/14-tag.png',
-    'gfx/icons/current_location.png',
-    'gfx/icons/145-persondot.png',
-    'gfx/icons/18-envelope.png',
-    'gfx/icons/twitter.png',
-    'gfx/icons/facebook.png',
-    'gfx/icons/topic_marker.png',
-    'gfx/icons/place_marker.png'
+    #'gfx/....png'
 )
 class ClientStrings(RequestHandler):
     """Return a translated dictionary of message strings using the keys in
