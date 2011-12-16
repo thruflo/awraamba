@@ -14,7 +14,6 @@ from weblayer import Bootstrapper, WSGIApplication
 
 from asset import ManifestedStaticURLGenerator
 from auth import SecureCookieAuthenticationManager
-from template import Renderer as TemplateRenderer
 
 try:
     from weblayer.utils import json_decode
@@ -193,7 +192,6 @@ def factory(global_config={}, **local_conf):
     bootstrapper = Bootstrapper(settings=config)
     settings, path_router = bootstrapper(
         path_router=object(),
-        TemplateRenderer=TemplateRenderer,
         AuthenticationManager=SecureCookieAuthenticationManager,
         StaticURLGenerator=ManifestedStaticURLGenerator
     )
