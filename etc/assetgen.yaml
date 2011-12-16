@@ -1,0 +1,65 @@
+generate:
+- js/client.js:
+    source: 
+      - raw: | 
+          (function ($) {
+      - ../src/awraamba/coffee/*.coffee
+      - raw: |
+          })(jQuery);
+    uglify:
+      - --define-from-module
+      - config
+    profile.dev:
+      uglify:
+        - --beautify
+        - --no-mangle
+        - --no-squeeze
+        - --define-from-module
+        - config
+      
+    
+  
+
+
+- gfx/*:
+    source: ../src/awraamba/gfx/*
+    type: binary
+
+- css/style.css:
+    source: 
+      - ../src/awraamba/css/*.css
+      - ../src/awraamba/sass/*.sass
+    
+
+
+prereqs:
+- ../build/static/js/config.js:
+    source: ../src/awraamba/prereqs/config.coffee
+    compressed: false
+
+#- ../build/static/robots.txt:
+#    source: ../src/awraamba/prereqs/robots.txt
+#    type: binary
+#
+#- ../build/static/favicon.ico:
+#    source: ../src/awraamba/prereqs/favicon.ico
+#    type: binary
+#
+
+
+output.directory: ../build/static
+output.hashed: true
+output.manifest: ../build/static/assets.json
+
+css.embed.path.root: ../src/awraamba/gfx
+css.embed.url.base: /static/gfx/
+
+env:
+  NODE_PATH.prefix: ../build/static/js
+
+
+profile.dev:
+  output.hashed: false
+  css.compressed: false
+  js.compressed: false
+
