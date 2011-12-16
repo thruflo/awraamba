@@ -11,6 +11,7 @@ setup(
     classifiers = [
         'Development Status :: 2 - Pre-Alpha',
         'Environment :: Web Environment',
+        'License :: Public Domain',
         'Natural Language :: English',
         'Operating System :: Unix',
         'Programming Language :: Python',
