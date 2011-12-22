@@ -33,9 +33,9 @@ setup(
         'PasteScript==1.7.5',
         #'Imaging', <!-- deal with this manually ;)
         'WSGIUtils',
+        'passlib',
         'pyDNS',
         'pytz',
-        'passlib'
     ],
     entry_points = {
         'setuptools.file_finders': [
