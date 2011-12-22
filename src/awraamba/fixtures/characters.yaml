@@ -1,0 +1,151 @@
+characters:
+- value: melkenesh
+  name: Melkenesh Mohammed
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: birtukan
+  name: Birtukan Kibret 
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: merkab
+  name: Merkab Omar 
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: muluneh
+  name: Muluneh Alemu
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: agenagnewu
+  name: Agenagnewu Ahmed
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: siddiq
+  name: Siddiq Beshir
+  bio: ...
+  locations: 
+    - weaving_workshop
+    - injera_kitchen
+  themes:
+    - gender
+
+- value: tsehaynesh
+  name: Tsehaynesh
+  bio: ...
+  locations: 
+    - classroom
+    - kindergarten
+  themes:
+    - education
+
+- value: ennanye
+  name: Ennanye
+  bio: ...
+  locations: 
+    - visitors_hut
+    - textile_shop
+  themes:
+    - economics
+
+- value: hossein
+  name: Hossein
+  bio: ...
+  locations: 
+    - carehome 
+  themes:
+    - elderly
+
+- value: fatuma
+  name: fatuma
+  bio: ...
+  locations: 
+    - carehome 
+  themes:
+    - elderly
+
+- value: golden_girls
+  name: Golden Girls
+  bio: ...
+  locations: 
+    - carehome 
+  themes:
+    - elderly
+
+- value: zumra
+  name: Zumra Nuru
+  bio: ...
+  locations: 
+    - library
+  themes:
+    - peace
+
+- value: melkiye
+  name: Melkiye
+  bio: ...
+  locations: 
+    - village_hall 
+  themes:
+    - peace
+
+- value: mesgana
+  name: Mesgana
+  bio: ...
+  locations: 
+    - mesgana_and_gebayehu_house
+  themes:
+    - marriage
+  
+
+- value: mulaw
+  name: Mulaw-Lanchi
+  bio: ...
+  locations: 
+    - clinic
+  themes:
+    - health
+  
+
+- value: etagegne
+  name: "Etagegne (Yezima Yimam)"
+  bio: ...
+  locations: 
+    - village_square 
+  themes:
+    - charity 
+
+- value: gebayehu
+  name: Gebayehu
+  bio: ...
+  locations: 
+    - mesgana_and_gebayehu_house
+    - finance_office
+  themes:
+    - marriage
+    - growth
+  
+
+

@@ -190,7 +190,61 @@ def populate_db():
     """ Populate the database.
     """
     
-    return NotImplemented
+    import yaml
+    
+    from os.path import dirname, join as join_path
+    here = dirname(__file__)
+    
+    data = {}
+    session = Session()
+    
+    item_types = ('themes', 'locations', 'characters')
+    def _get_model_cls(item_type):
+        if item_type == 'themes':
+            return Theme
+        elif item_type == 'locations':
+            return Location
+        elif item_type == 'characters':
+            return Character
+    
+    
+    for item in item_types:
+        sock = open(join_path(here, 'fixtures', '%s.yaml' % item), 'r')
+        data[item] = yaml.load(sock)
+        sock.close()
+    
+    for k, v in data.iteritems():
+        entities = []
+        model_cls = _get_model_cls(k)
+        for item in v[k]:
+            kwargs = item.copy()
+            kwargs['slug'] = kwargs.pop('value')
+            for t in item_types:
+                try:
+                    relation_slugs = kwargs.pop(t)
+                except KeyError:
+                    pass
+                else:
+                    relation_cls = _get_model_cls(t)
+                    relations = []
+                    for item_ in relation_slugs:
+                        relation = relation_cls.get_by_slug(item_)
+                        relations.append(relation)
+                    kwargs[t] = relations
+            entity = model_cls(**kwargs)
+            entities.append(entity)
+        logging.info('Adding %d %s.' % (len(entities), k))
+        logging.info(entities)
+        session.add_all(entities)
+        try:
+            session.commit()
+        except IntegrityError, err:
+            logging.error(err)
+            session.rollback()
+            session.close()
+            break
+    
+    session.close()
     
 
 def bootstrap():

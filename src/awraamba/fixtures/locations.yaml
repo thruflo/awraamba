@@ -1,0 +1,93 @@
+locations:
+- value: weaving_workshop
+  title: Weaving Workshop
+  description: ...
+  # location: ...
+  themes:
+    - gender
+  
+- value: injera_kitchen
+  title: Injera Kitchen
+  description: ...
+  # location: ...
+  themes:
+    - gender
+  
+- value: classroom
+  title: High School Classroom 
+  description: ...
+  # location: ...
+  themes:
+    - education
+  
+- value: kindergarten
+  title: Kindergarten
+  description: ...
+  # location: ...
+  themes:
+    - education
+  
+- value: visitors_hut
+  title: "Visitor's Hut"
+  description: ...
+  # location: ...
+  themes:
+    - economics
+  
+- value: textile_shop
+  title: Textile Shop
+  description: ...
+  # location: ...
+  themes:
+    - economics
+  
+- value: carehome
+  title: Elderly Carehome
+  description: ...
+  # location: ...
+  themes:
+    - elderly
+  
+- value: library
+  title: Library
+  description: ...
+  # location: ...
+  themes:
+    - peace
+  
+- value: village_hall
+  title: Village Hall
+  description: ...
+  # location: ...
+  themes:
+    - peace
+  
+- value: mesgana_and_gebayehu_house
+  title: "Mesgana & Gebayehu's House"
+  description: ...
+  # location: ...
+  themes:
+    - marriage
+  
+- value: clinic
+  title: Clinic
+  description: ...
+  # location: ...
+  themes:
+    - health
+  
+- value: village_square
+  title: Village Square 
+  description: ...
+  # location: ...
+  themes:
+    - charity
+  
+- value: finance_office
+  title: Finance Office
+  description: ...
+  # location: ...
+  themes:
+    - marriage
+    - growth
+  
