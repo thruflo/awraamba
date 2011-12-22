@@ -4,6 +4,7 @@
 bin/
 build/
 etc/.sass-cache/
+etc/secret.ini
 include/
 lib/
 src/awraamba.egg-info
