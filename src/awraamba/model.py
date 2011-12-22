@@ -315,10 +315,10 @@ def create_admin():
     
     import schema
     username = unicode(raw_input('Admin username: ') or u'thruflo')
-    email_address = unicode(raw_input('Email address: ') or u'thruflo+spam@gmail.com')
+    email = unicode(raw_input('Email address: ') or u'thruflo+spam@gmail.com')
     password = unicode(schema.EncryptedPassword.to_python(getpass.getpass()))
     
-    user = User.create(username, email_address, password)
+    user = User.create(username, email, password)
     user.is_admin = True
     user.is_confirmed = True
     session.add(user)

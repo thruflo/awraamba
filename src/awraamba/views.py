@@ -19,11 +19,8 @@ import urllib2
 
 from datetime import datetime, timedelta
 
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-
 import formencode
+import mail
 import pytz
 
 from sqlalchemy import func
@@ -232,55 +229,8 @@ class Index(RequestHandler):
     
 
 
-#class ConfirmationEmailMixin(object):
-#    """Provides a ``send_confirm_notification(user)`` method."""
-#    
-#    def _send(self, recipient, subject, body):
-#        """Handles the email message boilerplate."""
-#        
-#        msg = MIMEMultipart('related')
-#        msg.preamble = 'This is a multi-part message in MIME format.'
-#        
-#        msg['Subject'] = subject
-#        msg['From'] = self.settings['site_email_address']
-#        msg['To'] = recipient
-#        parts = MIMEMultipart('alternative')
-#        msg.attach(parts)
-#        
-#        parts.attach(MIMEText(encode_to_utf8(body), 'plain', 'utf-8'))
-#        
-#        smtp_domain = self.settings.get('smtp_domain')
-#        smtp_username = self.settings.get('smtp_username')
-#        smtp_password = self.settings.get('smtp_password')
-#        
-#        recipients = [recipient]
-#        
-#        s = smtplib.SMTP(smtp_domain, 587)
-#        s.ehlo()
-#        s.starttls()
-#        s.ehlo()
-#        s.login(smtp_username, smtp_password)
-#        s.sendmail(smtp_username, recipients, msg.as_string())
-#        s.quit()
-#        
-#        return True
-#        
-#    
-#    def send_confirm_notification(self, user):
-#        """Call to send email.  Returns ``True`` if the email is sent."""
-#        
-#        # Don't send an email to a user who's already confirmed.
-#        if user.is_confirmed:
-#            return False
-#        
-#        subject = self._(u'Please confirm your email address to complete your registration.')
-#        recipient = user.email_address
-#        body = self.render('emails/confirm.tmpl', user=user)
-#        return self._send(recipient, subject, body)
-#        
-#    
-#    
-#
+
+
 #class Login(RequestHandler):
 #    """Provides a login form and handles login."""
 #    
@@ -320,61 +270,86 @@ class Index(RequestHandler):
 #    
 #    
 #
-#class Signup(RequestHandler, ConfirmationEmailMixin):
-#    """Provides a login form and handles login."""
-#    
-#    def post(self):
-#        """Logs a user in by setting the ``user_id`` cookie."""
-#        
-#        # Validate the user input.
-#        p = self.request.params
-#        params = {
-#            'username': p.get('username', None),
-#            'email_address': p.get('email_address', None),
-#            'password': p.get('password', None),
-#            'confirm': p.get('confirm', None)
-#        }
-#        try:
-#            params = schema.Signup.to_python(params)
-#        except formencode.Invalid, err:
-#            logging.warning(err)
-#            errors = err.error_dict and err.error_dict or {}
-#            message = self._(u'We couldn\'t sign you up.')
-#            return self.render('signup.tmpl', errors=errors, message=message)
-#        
-#        # Create the user.
-#        session = model.Session()
-#        user = model.User.create(
-#            params['username'], 
-#            params['email_address'], 
-#            params['password']
-#        )
-#        session.add(user)
-#        try:
-#            session.commit()
-#        except IntegrityError, err:
-#            logging.error(err)
-#            session.rollback()
-#            message = self._(u'We couldn\'t sign you up.')
-#            return self.render('signup.tmpl', errors={}, message=message)
-#        else: # Send the confirm notification
-#            if not self.send_confirm_notification(user):
-#                logging.error('Could not send email to %s' % user.email_address)
-#                session.rollback()
-#                message = self._(u'We couldn\'t sign you up.')
-#                return self.render('signup.tmpl', errors={}, message=message)
-#            # Redirect to thanks.
-#            return self.redirect('/thanks/%s' % params['username'])
-#        finally:
-#            session.close()
-#        
-#    
-#    def get(self):
-#        return self.render('signup.tmpl', errors={}, message=None)
-#        
-#    
-#    
-#
+
+
+class Signup(RequestHandler): #, ConfirmationEmailMixin):
+    """Provides a login form and handles login."""
+    
+    def send_confirm_notification(self, user):
+        """Send confirmation email."""
+        
+        # Don't send an email to a user who's already confirmed.
+        if user.is_confirmed:
+            return False
+        
+        mailer = mail.PostmarkMailer()
+        subject = self._(u'Please confirm your email address to complete your registration.')
+        body = self.render('emails/confirm.tmpl', user=user)
+        bcc = self.settings.get('dev', False) and ['thruflo+awraamba@gmail.com'] or []
+        return mailer.send(
+            bcc=bcc,
+            sender=self.settings['site_email_address'],
+            subject=subject,
+            text_body=body,
+            to=user.email
+        )
+    
+    
+    def post(self):
+        """Logs a user in by setting the ``user_id`` cookie."""
+        
+        # Validate the user input.
+        p = self.request.params
+        params = {
+            'username': p.get('username', None),
+            'email': p.get('email', None),
+            'password': p.get('password', None),
+            'confirm': p.get('confirm', None)
+        }
+        try:
+            params = schema.Signup.to_python(params)
+        except formencode.Invalid, err:
+            logging.warning(err)
+            errors = err.error_dict and err.error_dict or {}
+            message = self._(u'We couldn\'t sign you up.')
+            return self.render('signup.tmpl', errors=errors, message=message)
+        
+        # Create the user.
+        session = model.Session()
+        user = model.User.create(
+            params['username'], 
+            params['email'], 
+            params['password']
+        )
+        session.add(user)
+        try:
+            session.commit()
+        except IntegrityError, err:
+            logging.error(err)
+            session.rollback()
+            message = self._(u'We couldn\'t sign you up.')
+            return self.render('signup.tmpl', errors={}, message=message)
+        else: # Send the confirm notification
+            response = self.send_confirm_notification(user)
+            if response != True:
+                logging.error('Could not send email to %s' % user.email)
+                logging.error(response)
+                logging.error('/confirm/%s' % user.confirmation_hash)
+                session.rollback()
+                message = self._(u'We couldn\'t sign you up')
+                return self.render('signup.tmpl', errors={}, message=message)
+            # Redirect to thanks.
+            return self.redirect('/thanks/%s' % params['username'])
+        finally:
+            session.close()
+        
+    
+    def get(self):
+        return self.render('signup.tmpl', errors={}, message=None)
+        
+    
+    
+
 #class Thanks(RequestHandler, ConfirmationEmailMixin):
 #    """
 #    """
@@ -390,7 +365,7 @@ class Index(RequestHandler):
 #    def post(self, username):
 #        user = self._get_context(username)
 #        if not self.send_confirm_notification(user):
-#            logging.error('Could not send email to %s' % user.email_address)
+#            logging.error('Could not send email to %s' % user.email)
 #            message = self._(u'We couldn\'t resend the email.')
 #            return self.render('thanks.tmpl', message=message)
 #        

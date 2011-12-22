@@ -8,6 +8,7 @@ import views
 
 mapping = [
     (r'/', views.Index),
+    (r'/signup', views.Signup),
     (r'/client_strings.json', views.ClientStrings),
     (r'/.*', views.NotFound)
 ]

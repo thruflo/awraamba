@@ -212,9 +212,9 @@ class UniqueEmail(UnicodeEmail):
     
     def validate_python(self, value, state):
         super(UniqueEmail, self).validate_python(value, state)
-        if User.query.filter_by(email_address=value).first():
+        if User.query.filter_by(email=value).first():
             raise validators.Invalid(
-                self.message("taken", state, email_address=value),
+                self.message("taken", state, email=value),
                 value, 
                 state
             )
@@ -436,7 +436,7 @@ class Signup(formencode.Schema):
     """Fields to validate on signup."""
     
     username = UniqueUsername(not_empty=True)
-    email_address = UniqueEmail(resolve_domain=True, not_empty=True)
+    email = UniqueEmail(resolve_domain=True, not_empty=True)
     password = EncryptedPassword(not_empty=True)
     confirm = RawPassword(not_empty=True)
     chained_validators = [
