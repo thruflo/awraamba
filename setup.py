@@ -35,6 +35,7 @@ setup(
         'WSGIUtils',
         'passlib',
         'pyDNS',
+        'python-postmark',
         'pytz',
     ],
     entry_points = {
