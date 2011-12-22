@@ -3,6 +3,14 @@ generate:
     source: 
       - ../third_party/emberjs/dist/ember.js
       - ../third_party/popcornjs/dist/popcorn-complete.js
+      - ../third_party/bootstrap/js/bootstrap-alerts.js
+      - ../third_party/bootstrap/js/bootstrap-buttons.js
+      - ../third_party/bootstrap/js/bootstrap-dropdown.js
+      - ../third_party/bootstrap/js/bootstrap-modal.js
+      - ../third_party/bootstrap/js/bootstrap-scrollspy.js
+      - ../third_party/bootstrap/js/bootstrap-tabs.js
+      - ../third_party/bootstrap/js/bootstrap-twipsy.js
+      - ../third_party/bootstrap/js/bootstrap-popover.js
     
 
 
@@ -27,11 +35,14 @@ generate:
     
   
 
-
-
 - gfx/*:
     source: ../src/awraamba/gfx/*
     type: binary
+
+- css/base.css:
+    source: 
+      - ../third_party/bootstrap/bootstrap.min.css
+    
 
 - css/style.css:
     source: 

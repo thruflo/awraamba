@@ -11,10 +11,11 @@
       <meta name="keywords" content="${_(u'Awra,Amba,AwraAmba,...')}" />
       <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
       <meta http-equiv="Content-Language" content="${target_language},${','.join(remaining_languages)}" />
-      <meta http-equiv="Cache-Control" content="no-cache" />
-      <meta http-equiv="Pragma" content="no-cache" />
-      <meta http-equiv="Expires" content="Fri, 01 Jan 1990 00:00:00 GMT" />
+      <!--[if lt IE 9]>
+        <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+      <![endif]-->
       <link rel="shortcut icon" href="/favicon.ico" />
+      <link type="text/css" rel="stylesheet" href="${get_static_url('css/base.css')}" />
       <link type="text/css" rel="stylesheet" href="${get_static_url('css/style.css')}" />
       ${self.sub_headers()}
     % endif
