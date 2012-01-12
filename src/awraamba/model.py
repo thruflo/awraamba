@@ -219,6 +219,15 @@ def populate_db():
         for item in v[k]:
             kwargs = item.copy()
             kwargs['slug'] = kwargs.pop('value')
+            # Normalise for strings that are wrapped with double quotes
+            # and / or need to have whitespace stripped.
+            for j, w in kwargs.items():
+                if isinstance(w, basestring):
+                    w = w.strip()
+                    if w.startswith('"') and w.endswith('"'):
+                        w = w[1:-1]
+                    kwargs[j] = w
+            # Setup any relations by finding the related entity by type and slug.
             for t in item_types:
                 try:
                     relation_slugs = kwargs.pop(t)
@@ -234,7 +243,6 @@ def populate_db():
             entity = model_cls(**kwargs)
             entities.append(entity)
         logging.info('Adding %d %s.' % (len(entities), k))
-        logging.info(entities)
         session.add_all(entities)
         try:
             session.commit()
