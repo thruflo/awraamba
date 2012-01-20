@@ -12,7 +12,7 @@ def read(filename):
 
 setup(
     name='awraamba',
-    version='0.0',
+    version='0.1',
     description='awraamba',
     long_description=read('README.md') + '\n\n' + read('CHANGES.md'),
     classifiers=[
@@ -32,10 +32,10 @@ setup(
         'pyramid',
         'SQLAlchemy',
         'transaction',
-        #'pyramid_assetgen',
+        'pyramid_assetgen',
         'pyramid_debugtoolbar',
         'pyramid_tm',
-        #'pyramid_weblayer',
+        'pyramid_weblayer',
         'zope.sqlalchemy',
         'waitress',
         # Imaging, e.g.: http://dist.repoze.org/PIL-1.1.6.tar.gz
