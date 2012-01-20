@@ -1,26 +1,16 @@
 generate:
-- js/base.js:
+- base.js:
     source: 
-      - ../third_party/emberjs/dist/ember.js
       - ../third_party/popcornjs/dist/popcorn-complete.js
-      - ../third_party/bootstrap/js/bootstrap-alerts.js
-      - ../third_party/bootstrap/js/bootstrap-buttons.js
-      - ../third_party/bootstrap/js/bootstrap-dropdown.js
-      - ../third_party/bootstrap/js/bootstrap-modal.js
-      - ../third_party/bootstrap/js/bootstrap-scrollspy.js
-      - ../third_party/bootstrap/js/bootstrap-tabs.js
-      - ../third_party/bootstrap/js/bootstrap-twipsy.js
-      - ../third_party/bootstrap/js/bootstrap-popover.js
     
 
-
-- js/client.js:
+- client.js:
     source: 
       - raw: | 
-          (function ($) {
+          (function () {
       - ../src/awraamba/coffee/*.coffee
       - raw: |
-          })(jQuery);
+          })();
     uglify:
       - --define-from-module
       - config
@@ -33,18 +23,12 @@ generate:
         - config
       
     
-  
 
 - gfx/*:
     source: ../src/awraamba/gfx/*
     type: binary
 
-- css/base.css:
-    source: 
-      - ../third_party/bootstrap/bootstrap.min.css
-    
-
-- css/style.css:
+- style.css:
     source: 
       - ../src/awraamba/css/*.css
       - ../src/awraamba/sass/*.sass
@@ -52,33 +36,28 @@ generate:
 
 
 prereqs:
-- ../build/static/js/config.js:
+- ../src/awraamba/assets/config.js:
     source: ../src/awraamba/prereqs/config.coffee
     compressed: false
 
-#- ../build/static/robots.txt:
-#    source: ../src/awraamba/prereqs/robots.txt
-#    type: binary
-#
-#- ../build/static/favicon.ico:
+- ../src/awraamba/assets/robots.txt:
+    source: ../src/awraamba/prereqs/robots.txt
+    type: binary
+
+#- ../var/static/favicon.ico:
 #    source: ../src/awraamba/prereqs/favicon.ico
 #    type: binary
 #
 
-
-output.directory: ../build/static
-output.hashed: true
-output.manifest: ../build/static/assets.json
-
-css.embed.path.root: ../src/awraamba/gfx
-css.embed.url.base: /static/gfx/
-
 env:
-  NODE_PATH.prefix: ../build/static/js
+  NODE_PATH.prefix: ../var/static
 
-
+css.embed.path.root: ../src/awraamba/assets/gfx
+css.embed.url.base: /static/gfx/
+output.directory: ../src/awraamba/assets
+output.hashed: true
+output.manifest: ../src/awraamba/assets/assets.json
 profile.dev:
   output.hashed: false
   css.compressed: false
   js.compressed: false
-

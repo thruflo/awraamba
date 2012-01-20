@@ -1,4 +1,4 @@
 User-agent: *
 Disallow: /static/
-Disallow: /thumbnails/
+Disallow: /thumbs/
 Disallow: /api/

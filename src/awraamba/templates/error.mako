@@ -1,4 +1,4 @@
-<%inherit file="base.tmpl"/>
+<%inherit file="base.mako"/>
 
 <%def name="sub_title()">${_("Error")}</%def>
 

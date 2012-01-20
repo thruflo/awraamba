@@ -16,41 +16,18 @@ __all__ = [
 import logging
 from datetime import datetime
 
+from passlib.apps import custom_app_context as pwd_context
 from sqlalchemy import create_engine, desc, or_
 from sqlalchemy import Column, MetaData
 from sqlalchemy import Boolean, DateTime, Integer, Unicode
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
+from zope.sqlalchemy import ZopeTransactionExtension
 
-from passlib.apps import custom_app_context as pwd_context
-
-from weblayer.component import registry
-from weblayer.interfaces import ISettings
-from weblayer.utils import generate_hash
-
-def engine_factory():
-    """Creates the engine specified by the application settings."""
-    
-    settings = registry.getUtility(ISettings)
-    db_url = 'postgresql://%s:%s@%s:%s/%s' % (
-        settings['db_user'],
-        settings['db_password'],
-        settings['db_host'],
-        settings['db_port'],
-        settings['db_name']
-    )
-    return create_engine(
-        db_url, 
-        max_overflow=100, 
-        pool_size=20, 
-        pool_recycle=240, 
-        pool_timeout=10
-    )
-    
-
-engine = engine_factory()
-Session = scoped_session(sessionmaker(bind=engine))
+Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 SQLModel = declarative_base()
+
+from .utils import generate_hash
 
 class ClassProperty(property):
     def __get__(self, cls, owner):
@@ -185,6 +162,8 @@ class SearchMixin(object):
       
     """
     
+    _languages = ['english']
+    
     @classmethod
     def get_search_mapping(cls):
         items = []
@@ -210,10 +189,7 @@ class SearchMixin(object):
           for now though.
         """
         
-        settings = registry.getUtility(ISettings)
-        pg_catalogs = settings['pg_catalogs'].split(',')
-        
-        for item in pg_catalogs:
+        for item in cls._languages:
             # Add an indexed external search column.
             cmd1 = 'ALTER TABLE "%s" ADD COLUMN search_vector_%s tsvector' % (
                 target.name,
@@ -245,18 +221,13 @@ class SearchMixin(object):
           that matches any of the search catalogs.
         """
         
-        settings = registry.getUtility(ISettings)
-        catalogs = settings['pg_catalogs'].split(',')
-        
         ts_query = "plainto_tsquery(E'%s')" % keywords.replace("'", "")
-        
         clauses = []
-        for item in catalogs:
+        for item in cls._languages:
             clause = "%s.search_vector_%s @@ %s" % (cls.__tablename__, item, ts_query)
             clauses.append(clause)
         
         return or_(*clauses)
-        
     
     
 

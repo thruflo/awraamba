@@ -1,21 +1,22 @@
 <%def name="sub_title()"></%def>
 <%def name="sub_headers()"></%def>
 <!DOCTYPE HTML>
-<html lang="${target_language}">
+<html lang="${localizer.locale_name}">
   <head>
     <meta charset="utf-8" />
-    <title>${settings['site_title']} / ${self.sub_title()}</title>
+    <title>${request.registry.settings['site_title']} / ${self.sub_title()}</title>
     % if not is_ajax:
-      <meta name="description" content="${_(u'%(site_title)s ...' % settings)}" />
+      <meta name="description" content="${_(u'%(site_title)s ...' % request.registry.settings)}" />
       <meta name="keywords" content="${_(u'Awra,Amba,AwraAmba,...')}" />
-      <meta name="author" content="Write The Down Productions Ltd., Julie Kim, James Arthur." />
-      <meta http-equiv="Content-Language" content="${target_language},${','.join(remaining_languages)}" />
+      <meta name="author" content="Write This Down Productions Ltd., Julie Kim, James Arthur." />
+      <meta http-equiv="Content-Language" content="${localizer.locale_name}" />
       <!--[if lt IE 9]>
         <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
       <![endif]-->
       <link rel="shortcut icon" href="/favicon.ico" />
-      <link type="text/css" rel="stylesheet" href="${get_static_url('css/base.css')}" />
-      <link type="text/css" rel="stylesheet" href="${get_static_url('css/style.css')}" />
+      <link type="text/css" rel="stylesheet"
+          href="${request.static_url('awraamba:assets/da39a3ee5e6b4b0d3255bfef95601890afd80709-style.css')}"
+      />
       ${self.sub_headers()}
     % endif
   </head>
@@ -23,7 +24,7 @@
     <div class="topbar">
       <div class="topbar-inner">
         <div class="container-fluid">
-          <a class="brand" href="/">${settings['site_title']}</a>
+          <a class="brand" href="/">${request.registry.settings['site_title']}</a>
           <ul class="nav">
             <li class="active"><a href="/">Themes</a></li>
             <li><a href="/about">Characters</a></li>
@@ -35,7 +36,7 @@
               <button class="btn primary" type="submit">${_(u'Signup')}</button>
             </form>
             <form action="/login" method="post" class="pull-right">
-              ${xsrf_input}
+              <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}" />
               <input class="input-small" type="text" placeholder="${_(u'Username')}" />
               <input class="input-small" type="password" placeholder="${_(u'Password')}">
               <button class="btn" type="submit">${_(u'Login')}</button>
@@ -46,7 +47,7 @@
                 <a class="dropdown-toggle" href="#">${current_user.username}</a>
                 <ul class="dropdown-menu">
                   <li><a href="/users/${current_user.username}">${_(u'Profile')}</a></li>
-                  <li class="disabled"><a href="/users/${current_user.username}/settings">${_(u'Settings')}</a></li>
+                  <li class="disabled"><a href="/users/${current_user.username}/request.registry.settings">${_(u'request.registry.settings')}</a></li>
                   <li class="divider"></li>
                   <li><a href="/logout">${_(u'Logout')}</a></li>
                 </ul>
@@ -67,13 +68,13 @@
       </script>
       <script type="text/javascript" src="/client_strings.json">
       </script>
-      <script type="text/javascript" src="${get_static_url('js/base.js')}">
+      <script type="text/javascript" src="${request.static_url('awraamba:assets/base.js')}">
       </script>
-      <script type="text/javascript" src="${get_static_url('js/client.js')}">
+      <script type="text/javascript" src="${request.static_url('awraamba:assets/client.js')}">
       </script>
       <script type="text/javascript">
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', ${settings['google_analytics']}]);
+        _gaq.push(['_setAccount', ${request.registry.settings['google_analytics']}]);
         _gaq.push(['_setDomainName', '${request.host}']);
         _gaq.push(['_trackPageview']);
         (function() {

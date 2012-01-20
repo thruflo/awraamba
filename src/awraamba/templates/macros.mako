@@ -31,7 +31,7 @@
           attrs_str += ' %s="%s"' % (k, v)
     %>
     <form ${attrs_str.strip()}>
-      ${xsrf_input}
+      <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}" />
       % if message:
         <div class="alert-message error">
           <a class="close" href="#">×</a>

@@ -4,6 +4,7 @@
 """Form schemas for validation."""
 
 import cgi
+import dateutil.parser
 import hashlib
 import logging
 import re
@@ -11,20 +12,19 @@ import urllib
 import urllib2
 import urlparse
 
+try:
+    import Image
+except ImportError:
+    from PIL import Image
+
 from cStringIO import StringIO
 from os.path import join as join_path, exists as path_exists
 
-import dateutil.parser
 import formencode
 from formencode import validators
-import Image
-
 from passlib.apps import custom_app_context as pwd_context
 
-from weblayer.component import registry
-from weblayer.interfaces import ISettings
-
-from model import User
+from .model import User
 
 id_pattern = r'\d+'
 valid_id = re.compile(r'^%s$' % id_pattern, re.U)
@@ -320,8 +320,8 @@ class ThumbnailImage(validators.UnicodeString):
                 return err
             # get an md5 hash
             digest = hashlib.md5(buf.getvalue()).hexdigest()
-            # if ``/var/thumbnails/$digest`` doesnt already exist then save it
-            settings = registry.getUtility(ISettings)
+            # if ``settings['thumbnails_dir']/$digest`` doesn't already exist then save it
+            settings = state.settings
             target_dir = settings.get('thumbnails_directory')
             thumbnail_path = join_path(target_dir, '%s.png' % digest)
             if not path_exists(thumbnail_path):

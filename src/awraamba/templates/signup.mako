@@ -1,5 +1,5 @@
-<%inherit file="base.tmpl"/>
-<%namespace name="macros" file="macros.tmpl"/>
+<%inherit file="base.mako"/>
+<%namespace name="macros" file="macros.mako"/>
 
 <%def name="sub_title()">${_(u'Signup')}</%def>
 
