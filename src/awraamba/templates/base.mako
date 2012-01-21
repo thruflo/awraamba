@@ -15,7 +15,10 @@
       <![endif]-->
       <link rel="shortcut icon" href="/favicon.ico" />
       <link type="text/css" rel="stylesheet"
-          href="${request.static_url('awraamba:assets/da39a3ee5e6b4b0d3255bfef95601890afd80709-style.css')}"
+          href="${request.static_url('awraamba:assets/base.css')}"
+      />
+      <link type="text/css" rel="stylesheet"
+          href="${request.static_url('awraamba:assets/style.css')}"
       />
       ${self.sub_headers()}
     % endif

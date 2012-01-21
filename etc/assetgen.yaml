@@ -28,6 +28,12 @@ generate:
     source: ../src/awraamba/gfx/*
     type: binary
 
+- base.css:
+    source: 
+      - ../third_party/bootstrap/bootstrap.min.css
+      - ../src/awraamba/sass/*.sass
+    
+
 - style.css:
     source: 
       - ../src/awraamba/css/*.css
@@ -50,7 +56,7 @@ prereqs:
 #
 
 env:
-  NODE_PATH.prefix: ../var/static
+  NODE_PATH.prefix: ../src/awraamba/assets
 
 css.embed.path.root: ../src/awraamba/assets/gfx
 css.embed.url.base: /static/gfx/
