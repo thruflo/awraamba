@@ -13,10 +13,12 @@ from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
 from pyramid.request import Request
+from pyramid.view import AppendSlashNotFoundViewFactory
 from pyramid_assetgen import AssetGenRequestMixin
 from pyramid_beaker import session_factory_from_settings
 
 from .model import Session
+from .views import not_found_view
 
 # Mapping of route names to patterns.
 route_mapping = {
@@ -56,6 +58,10 @@ def factory(global_config, **settings):
     config.add_static_view('static', static_dir, cache_max_age=1209600)
     config.add_static_view('thumbs', thumbs_dir, cache_max_age=1209600)
     config.add_static_view('tour', tour_dir)
+    
+    # Configure a custom 404 that first tries to append a slash to the URL.
+    not_found = AppendSlashNotFoundViewFactory(not_found_view)
+    config.add_view(not_found, context='pyramid.httpexceptions.HTTPNotFound')
     
     # Expose dynamic views.
     for name, pattern in route_mapping.items():
