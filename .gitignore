@@ -8,4 +8,5 @@ etc/secret.ini
 include/
 lib/
 src/awraamba.egg-info
+src/awraamba/assets/
 var/
