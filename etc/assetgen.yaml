@@ -3,6 +3,10 @@ generate:
     source: 
       - ../third_party/underscore/underscore.js
       - ../third_party/backbone/backbone.js
+      - ../third_party/mobone/_namespace.coffee
+      - ../third_party/mobone/event.coffee
+      - ../third_party/mobone/math.coffee
+      - ../third_party/mobone/string.coffee
       - ../third_party/popcornjs/dist/popcorn-complete.js
     uglify:
       - --define-from-module
