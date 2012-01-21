@@ -49,7 +49,6 @@ generate:
 - base.css:
     source: 
       - ../third_party/bootstrap/bootstrap.min.css
-      - ../src/awraamba/sass/*.sass
     
 
 - style.css:
