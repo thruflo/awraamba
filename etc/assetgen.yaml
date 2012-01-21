@@ -1,8 +1,20 @@
 generate:
 - base.js:
     source: 
-      - ../third_party/underscore/underscore-min.js
-      #- ../third_party/popcornjs/dist/popcorn-complete.js
+      - ../third_party/underscore/underscore.js
+      - ../third_party/backbone/backbone.js
+      - ../third_party/popcornjs/dist/popcorn-complete.js
+    uglify:
+      - --define-from-module
+      - config
+    profile.dev:
+      uglify:
+        - --beautify
+        - --no-mangle
+        - --no-squeeze
+        - --define-from-module
+        - config
+      
     
 
 - client.js:
