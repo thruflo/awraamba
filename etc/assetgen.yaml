@@ -1,6 +1,7 @@
 generate:
 - base.js:
     source: 
+      - ../third_party/jslibs/jquery/plugins/jquery.url.js
       - ../third_party/underscore/underscore.js
       - ../third_party/backbone/backbone.js
       - ../third_party/mobone/_namespace.coffee
