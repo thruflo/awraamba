@@ -69,7 +69,7 @@
                 <a class="dropdown-toggle" href="#">${current_user.username}</a>
                 <ul class="dropdown-menu">
                   <li><a href="/users/${current_user.username}">${_(u'Profile')}</a></li>
-                  <li class="disabled"><a href="/users/${current_user.username}/request.registry.settings">${_(u'request.registry.settings')}</a></li>
+                  <li class="disabled"><a href="/users/${current_user.username}/settings">${_(u'Settings')}</a></li>
                   <li class="divider"></li>
                   <li><a href="/logout">${_(u'Logout')}</a></li>
                 </ul>
