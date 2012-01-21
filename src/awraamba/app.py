@@ -21,9 +21,9 @@ from .model import Session
 from .views import not_found_view
 
 # Mapping of route names to patterns.
-route_mapping = {
-    'explore': '/'
-}
+route_mapping = (
+    ('app', '/*path'),
+)
 
 def factory(global_config, **settings):
     """Call to return a WSGI application."""
@@ -64,7 +64,7 @@ def factory(global_config, **settings):
     config.add_view(not_found, context='pyramid.httpexceptions.HTTPNotFound')
     
     # Expose dynamic views.
-    for name, pattern in route_mapping.items():
+    for name, pattern in route_mapping:
         config.add_route(name, pattern)
     
     # Run a venusian scan to pick up the declerative configuration from this

@@ -4,7 +4,13 @@
 <html lang="${localizer.locale_name}">
   <head>
     <meta charset="utf-8" />
-    <title>${request.registry.settings['site_title']} / ${self.sub_title()}</title>
+    <% sub_title = self.sub_title() %>
+    <title>
+      ${request.registry.settings['site_title']}
+      % if sub_title:
+        / ${sub_title}
+      % endif
+    </title>
     % if not is_ajax:
       <meta name="description" content="${_(u'%(site_title)s ...' % request.registry.settings)}" />
       <meta name="keywords" content="${_(u'Awra,Amba,AwraAmba,...')}" />
@@ -92,11 +98,19 @@
         window.message_strings = {};
         window.static_urls = {};
       </script>
+      <script type="text/javascript" src="${request.static_url('awraamba:tour/tour.js')}">
+      </script>
       <script type="text/javascript" src="${request.static_url('awraamba:assets/base.js')}">
       </script>
       <script type="text/javascript" src="${request.static_url('awraamba:assets/client.js')}">
       </script>
-      <script type="text/javascript" src="${request.static_url('awraamba:tour/tour.js')}">
+      <script type="text/javascript">
+        // Start the client application running.
+        $(document).ready(
+          function () {
+            app.main();
+          }
+        );
       </script>
       <!--script type="text/javascript">
         var _gaq = _gaq || [];
