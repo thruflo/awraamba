@@ -88,7 +88,9 @@
     % if not is_ajax:
       <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
       </script>
-      <script type="text/javascript" src="/client_strings.json">
+      <script type="text/javascript">
+        window.message_strings = {};
+        window.static_urls = {};
       </script>
       <script type="text/javascript" src="${request.static_url('awraamba:assets/base.js')}">
       </script>
