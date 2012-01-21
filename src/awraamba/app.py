@@ -46,13 +46,16 @@ def factory(global_config, **settings):
     # Tell the translation machinery where the message strings are.
     config.add_translation_dirs(settings['locale_dir'])
     
-    # Expose static directories, cached for two weeks, specifying that
-    # ``settings['static_dir'] has an assetgen manifest in it.
+    # Expose `/static` and `/thumbs` directories, cached for two weeks,
+    # specifying that ``settings['static_dir'] has an assetgen manifest
+    # in it, and expose the panorama `/tour` files without caching.
     static_dir = settings['static_dir']
     thumbs_dir = settings['thumbnails_dir']
+    tour_dir = settings['tour_dir']
     config.add_assetgen_manifest(static_dir)
     config.add_static_view('static', static_dir, cache_max_age=1209600)
     config.add_static_view('thumbs', thumbs_dir, cache_max_age=1209600)
+    config.add_static_view('tour', tour_dir)
     
     # Expose dynamic views.
     for name, pattern in route_mapping.items():

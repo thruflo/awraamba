@@ -60,7 +60,7 @@
         </div>
       </div>
     </div>
-    <div class="container-fluid">
+    <div id="main-content" class="container-fluid">
       ${next.body()}
       <footer>
         <p>&copy; 2011 Write This Down Productions Ltd.</p>
@@ -75,7 +75,9 @@
       </script>
       <script type="text/javascript" src="${request.static_url('awraamba:assets/client.js')}">
       </script>
-      <script type="text/javascript">
+      <script type="text/javascript" src="${request.static_url('awraamba:tour/tour.js')}">
+      </script>
+      <!--script type="text/javascript">
         var _gaq = _gaq || [];
         _gaq.push(['_setAccount', ${request.registry.settings['google_analytics']}]);
         _gaq.push(['_setDomainName', '${request.host}']);
@@ -85,7 +87,7 @@
           ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
           var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
         })();
-      </script>
+      </script-->
     % endif
   </body>
 </html>

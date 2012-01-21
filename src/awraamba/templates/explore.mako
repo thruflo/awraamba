@@ -2,4 +2,5 @@
 
 <%def name="sub_title()">${_("Explore")}</%def>
 
-Explore!
+<div id="explore-panorama">
+</div>
