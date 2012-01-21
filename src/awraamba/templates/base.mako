@@ -79,7 +79,7 @@
       </script>
       <!--script type="text/javascript">
         var _gaq = _gaq || [];
-        _gaq.push(['_setAccount', ${request.registry.settings['google_analytics']}]);
+        _gaq.push(['_setAccount', '${request.registry.settings["google_analytics"]}']);
         _gaq.push(['_setDomainName', '${request.host}']);
         _gaq.push(['_trackPageview']);
         (function() {
