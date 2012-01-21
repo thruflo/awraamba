@@ -32,13 +32,13 @@
             <%
               items = ((
                       '/', 
-                      _('Explore')
+                      _('Explore Awra Amba')
                   ), (
-                      '/themes/gender', 
-                      _('Example Theme')
+                      '/themes',
+                      _('Watch the Documentary')
                   ), (
                       '/scarf', 
-                      _('Scarf')
+                      _('The Interactive Scarf')
                   )
               )
               selected = None
