@@ -29,9 +29,28 @@
         <div class="container-fluid">
           <a class="brand" href="/">${request.registry.settings['site_title']}</a>
           <ul class="nav">
-            <li class="active"><a href="/">Themes</a></li>
-            <li><a href="/about">Characters</a></li>
-            <li><a href="/contact">Locations</a></li>
+            <%
+              items = ((
+                      '/', 
+                      _('Explore')
+                  ), (
+                      '/themes/gender', 
+                      _('Example Theme')
+                  ), (
+                      '/scarf', 
+                      _('Scarf')
+                  )
+              )
+              selected = None
+              for k, v in items:
+                  if request.path.startswith(k):
+                      selected = k
+            %>
+            % for path, label in items:
+              <li class="${path == selected and 'active' or ''}">
+                <a href="${path}">${label}</a>
+              </li>
+            % endfor
           </ul>
           % if not current_user:
             <form action="/signup" method="get" class="pull-right">
