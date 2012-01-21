@@ -1,12 +1,9 @@
-[submodule "third_party/emberjs"]
-	path = third_party/emberjs
-	url = git://github.com/emberjs/ember.js.git
 [submodule "third_party/popcornjs"]
 	path = third_party/popcornjs
 	url = git://github.com/webmademovies/popcorn-js
 [submodule "third_party/bootstrap"]
 	path = third_party/bootstrap
 	url = git://github.com/twitter/bootstrap.git
-[submodule "third_party/pyramid"]
-	path = third_party/pyramid
-	url = git://github.com/Pylons/pyramid.git
+[submodule "third_party/underscore"]
+	path = third_party/underscore
+	url = git://github.com/documentcloud/underscore.git

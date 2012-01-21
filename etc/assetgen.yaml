@@ -1,7 +1,7 @@
 generate:
 - base.js:
     source: 
-      - ../third_party/underscore/underscore.js
+      - ../third_party/underscore/underscore-min.js
       #- ../third_party/popcornjs/dist/popcorn-complete.js
     
 
