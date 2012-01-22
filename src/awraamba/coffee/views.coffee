@@ -59,34 +59,39 @@ define 'views', (exports, root) ->
   
   # ...
   class ExploreView extends Backbone.View
-    render: ->
-      # update the panorama location
+    defaults:
+      scene_name: 'village-square'
+    
+    render: =>
+      # Update the panorama location.
+      scene_name = @model.get 'value'
+      scene_name = @options.scene_name if not scene_name?
+      @krpano.call "loadscene('scene_#{scene_name}', null, MERGE);"
     
     initialize: ->
-      $target = $ '#explore-panorama'
+      _.defaults @options, @defaults
       # Resize the container manually.
-      resizer = new views.Resizer el: $target
+      resizer = new views.Resizer el: $('#explore-panorama')
       resizer.resize()
-      # Embed the krpano viewer.
-      @viewer = createPanoViewer
-        swf: '/tour/tour.swf'
-        target: 'explore-panorama'
-      @viewer.addVariable "xml", "/tour/tour.xml"
-      @viewer.embed()
-      # Bind to change events.
-      @model.bind 'change', @render
       # Hide and show *without* a repaint to keep the panorama state.
       # XXX cross browser testing.
       $target = $ @el
-      krpano = $('#krpanoSWFObject').get 0
-      # 1. Before starting the fade out, we freeze the view.
-      @bind 'beforehide', => krpano.call "freezeview(true);" if krpano.call?
-      # 2. On hide, we set the (already position absoute) container to hidden.
       @bind 'hide', => $target.css visibility: 'hidden'
-      # 3. On show, we make it visible again.
       @bind 'show', => $target.css visibility: 'visible'
-      # 4. After the fade out, we re-enable the user interaction.
-      @bind 'aftershow', => krpano.call "freezeview(false);" if krpano.call?
+      # Bind once to the krpano "load event".
+      root.krpano_loaded = =>
+        # Before starting the fade out, we freeze the view.  After the fade out,
+        # we re-enable the user interaction.
+        @krpano = $('#krpanoSWFObject').get 0
+        @bind 'beforehide', => @krpano.call "freezeview(true);" if @krpano.call?
+        @bind 'aftershow', => @krpano.call "freezeview(false);" if @krpano.call?
+        # Show the initial scene and change scene when the model value changes.
+        @model.bind 'change', @render
+        @render()
+        # Ignore future "events"
+        root.krpano_loaded = $.noop
+      # Embed the krpano viewer.
+      embedpano swf: '/tour/tour.swf', target: 'explore-panorama', xml: '/tour/tour.xml'
     
   
   # ...
