@@ -97,6 +97,10 @@
       <script type="text/javascript">
         window.message_strings = {};
         window.static_urls = {};
+        window.awraamba = {};
+        window.awraamba['template_variables'] = {
+          'is_first_time': ${is_first_time and "true" or "false"}
+        };
       </script>
       <script type="text/javascript" src="${request.static_url('awraamba:tour/tour.js')}">
       </script>

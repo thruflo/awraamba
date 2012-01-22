@@ -31,8 +31,15 @@ define 'app', (exports, root) ->
       $target.animate opacity: 1, 1500, =>
         @_current_view.trigger 'aftershow'
     
-    _show: (view_name) ->
-      # Fade the previous view out and the next view in.
+    _show: (view_name, callback) ->
+      # If it's the first time the user has visited, show the intro page.
+      if awraamba.template_variables.is_first_time
+        awraamba.template_variables.is_first_time = false
+        if view_name isnt 'intro_view'
+          view = @_get_or_create 'intro_view'
+          view.model.set 'value', window.location.pathname
+          return @navigate '/intro', true
+      # Else fade the previous view out and the next view in.
       previous_view = @_current_view
       @_current_view = @_get_or_create view_name
       if previous_view?
@@ -44,7 +51,7 @@ define 'app', (exports, root) ->
           @_show_current()
       else
         @_show_current()
-      @_current_view
+      callback @_current_view if callback?
     
     # Patch `Backbone.Router.navigate` to allow us to use absolute paths when
     # writing hrefs, e.g.: `<a href="/foo/bar">` whilst still supporting paths
@@ -60,6 +67,7 @@ define 'app', (exports, root) ->
     # Map url paths to method names.
     routes:
       ''                              : 'explore'
+      'intro'                         : 'intro'
       'explore'                       : 'explore'
       'explore/:location'             : 'explore'
       'themes'                        : 'watch'
@@ -68,20 +76,24 @@ define 'app', (exports, root) ->
       'scarf/:reaction'               : 'interact'
       ':user'                         : 'profile'
     # Handler methods.
+    intro: =>
+      console.log 'Controller.intro'
+      @_show 'intro_view'
+    
     explore: (location) =>
       console.log 'Controller.explore'
-      view = @_show 'explore_view'
-      view.model.set 'value', location
+      @_show 'explore_view', (view) =>
+        view.model.set 'value', location
     
     watch: (theme) =>
       console.log 'Controller.watch'
-      view = @_show 'watch_view'
-      view.model.set 'value', theme
+      @_show 'watch_view', (view) =>
+        view.model.set 'value', theme
     
     interact: (reaction) =>
       console.log 'Controller.interact'
-      view = @_show 'interact_view'
-      view.model.set 'value', reaction
+      @_show 'interact_view', (view) =>
+        view.model.set 'value', reaction
     
   
   # `main()` application entry point.  Call it to start the javascript.

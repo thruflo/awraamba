@@ -19,6 +19,44 @@ define 'views', (exports, root) ->
       $(window).bind 'resize', throttled_resize
     
   
+  # Show the intro screen and handle clicks by navigating to 
+  # `"/#{@model.get 'value'}"`.
+  class IntroView extends Backbone.View
+    events:
+      'dblclick #intro-enter-link'  : 'next'
+      'click #intro-enter-link'     : 'next'
+    
+    next: ->
+      path = @model.get 'value'
+      if not path or path.startsWith('/intro')
+        path = '/'
+      app.navigate path, true
+      false
+    
+    initialize: ->
+      $target = $ @el
+      $container = $ "#intro-video-container"
+      @player = Popcorn "#intro-video"
+      # Before hide, pause and rewind the video player and fade the video out.
+      # When the fade is done, rewind to the beginning.
+      @bind 'beforehide', => 
+        @player.pause()
+        $container.animate opacity: 0, 750, =>
+          @player.currentTime 0
+      @bind 'hide', => 
+        $target.hide()
+      @bind 'show', =>
+        $container.css opacity: 0
+        $target.show()
+      # After show, pause for two seconds, then fade the video in and play
+      # from the beginning.
+      @bind 'aftershow', =>
+        window.setTimeout =>
+            $container.animate opacity: 1, 1500, =>
+               @player.play 0
+          , 2000
+    
+  
   # ...
   class ExploreView extends Backbone.View
     render: ->
@@ -76,6 +114,7 @@ define 'views', (exports, root) ->
     
   
   exports.Resizer = Resizer
+  exports.IntroView = IntroView
   exports.ExploreView = ExploreView
   exports.WatchView = WatchView
   exports.InteractView = InteractView

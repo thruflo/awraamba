@@ -18,7 +18,7 @@ from pyramid_assetgen import AssetGenRequestMixin
 from pyramid_beaker import session_factory_from_settings
 
 from .model import Session
-from .views import not_found_view
+from .views import add_visited_cookie, not_found_view
 
 # Mapping of route names to patterns.
 route_mapping = (
