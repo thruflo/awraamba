@@ -19,8 +19,8 @@ define 'views', (exports, root) ->
       $(window).bind 'resize', throttled_resize
     
   
-  # Show the intro screen and handle clicks by navigating to 
-  # `"/#{@model.get 'value'}"`.
+  # Show the intro screen and handle clicks on the enter link by navigating to
+  # the request path stored in its model value.
   class IntroView extends Backbone.View
     events:
       'dblclick #intro-enter-link'  : 'next'
@@ -57,7 +57,8 @@ define 'views', (exports, root) ->
           , 2000
     
   
-  # ...
+  # Embed and hook up the krpano panorama and switch to the selected scenes when
+  # the scene name stored in the model value changes.
   class ExploreView extends Backbone.View
     defaults:
       scene_name: 'village-square'
@@ -94,7 +95,7 @@ define 'views', (exports, root) ->
       embedpano swf: '/tour/tour.swf', target: 'explore-panorama', xml: '/tour/tour.xml'
     
   
-  # ...
+  # Simple container menu -- does nothing.
   class WatchView extends Backbone.View
     render: ->
       # ...
