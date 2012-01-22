@@ -81,17 +81,17 @@ define 'app', (exports, root) ->
       @_show 'intro_view'
     
     explore: (location) =>
-      console.log 'Controller.explore'
+      console.log "Controller.explore #{location}"
       @_show 'explore_view', (view) =>
         view.model.set 'value', location
     
     watch: (theme) =>
-      console.log 'Controller.watch'
+      console.log "Controller.watch #{theme}"
       @_show 'watch_view', (view) =>
         view.model.set 'value', theme
     
     interact: (reaction) =>
-      console.log 'Controller.interact'
+      console.log "Controller.interact #{reaction}"
       @_show 'interact_view', (view) =>
         view.model.set 'value', reaction
     
