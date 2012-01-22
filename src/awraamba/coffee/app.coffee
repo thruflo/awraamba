@@ -71,7 +71,7 @@ define 'app', (exports, root) ->
       'explore'                       : 'explore'
       'explore/:location'             : 'explore'
       'themes'                        : 'watch'
-      'themes/:theme'                 : 'watch'
+      'themes/:theme'                 : 'theme'
       'scarf'                         : 'interact'
       'scarf/:reaction'               : 'interact'
       ':user'                         : 'profile'
@@ -84,10 +84,13 @@ define 'app', (exports, root) ->
       console.log "Controller.explore #{location}"
       @_show 'explore_view', (view) => view.model.set 'value', location
     
-    watch: (theme) =>
-      console.log "Controller.watch #{theme}"
-      @_show 'watch_view', (view) =>
-        view.model.set 'value', theme
+    watch: =>
+      console.log "Controller.watch"
+      @_show 'watch_view'
+    
+    theme: (theme) =>
+      console.log "Controller.theme #{theme}"
+      @_show 'theme_view', (view) => view.model.set 'value', theme
     
     interact: (reaction) =>
       console.log "Controller.interact #{reaction}"
