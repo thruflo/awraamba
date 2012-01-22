@@ -1,9 +1,9 @@
 <div id="intro-view">
   <div id="intro-video-container">
     <video height="288" width="512" id="intro-video">
-      <source src="http://videos.mozilla.org/serv/webmademovies/popcornplug.mp4"></source>
-      <source src="http://videos.mozilla.org/serv/webmademovies/popcornplug.ogv"></source>
-      <source src="http://videos.mozilla.org/serv/webmademovies/popcornplug.webm"></source>
+      <source src="http://videos.mozilla.org/serv/webmademovies/popcorntest.mp4"></source>
+      <source src="http://videos.mozilla.org/serv/webmademovies/popcorntest.ogv"></source>
+      <source src="http://videos.mozilla.org/serv/webmademovies/popcorntest.webm"></source>
     </video>
   </div>
   <hr />
