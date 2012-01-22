@@ -82,8 +82,7 @@ define 'app', (exports, root) ->
     
     explore: (location) =>
       console.log "Controller.explore #{location}"
-      @_show 'explore_view', (view) =>
-        view.model.set 'value', location
+      @_show 'explore_view', (view) => view.model.set 'value', location
     
     watch: (theme) =>
       console.log "Controller.watch #{theme}"
@@ -92,8 +91,7 @@ define 'app', (exports, root) ->
     
     interact: (reaction) =>
       console.log "Controller.interact #{reaction}"
-      @_show 'interact_view', (view) =>
-        view.model.set 'value', reaction
+      @_show 'interact_view', (view) => view.model.set 'value', reaction
     
   
   # `main()` application entry point.  Call it to start the javascript.
