@@ -44,7 +44,7 @@
                       _('Watch the Documentary')
                   ), (
                       '/scarf', 
-                      _('The Interactive Scarf')
+                      _('Weave the Scarf')
                   )
               )
               selected = None
