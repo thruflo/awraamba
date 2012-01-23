@@ -27,7 +27,7 @@ from zope.sqlalchemy import ZopeTransactionExtension
 Session = scoped_session(sessionmaker(extension=ZopeTransactionExtension()))
 SQLModel = declarative_base()
 
-from .utils import generate_hash
+from pyramid_weblayer.utils import generate_hash
 
 class ClassProperty(property):
     def __get__(self, cls, owner):
