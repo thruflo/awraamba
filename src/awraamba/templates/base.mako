@@ -58,7 +58,7 @@
               </li>
             % endfor
           </ul>
-          % if not current_user:
+          % if not request.is_authenticated:
             <form action="/signup" method="get" class="pull-right">
               &nbsp;
               <button class="btn primary" type="submit">${_(u'Signup')}</button>
@@ -72,10 +72,10 @@
           % else:
             <ul class="nav secondary-nav">
               <li class="dropdown">
-                <a class="dropdown-toggle" href="#">${current_user.username}</a>
+                <a class="dropdown-toggle" href="#">${request.user.username}</a>
                 <ul class="dropdown-menu">
-                  <li><a href="/users/${current_user.username}">${_(u'Profile')}</a></li>
-                  <li class="disabled"><a href="/users/${current_user.username}/settings">${_(u'Settings')}</a></li>
+                  <li><a href="/${request.user.username}">${_(u'Profile')}</a></li>
+                  <li class="disabled"><a href="/${request.user.username}/settings">${_(u'Settings')}</a></li>
                   <li class="divider"></li>
                   <li><a href="/logout">${_(u'Logout')}</a></li>
                 </ul>

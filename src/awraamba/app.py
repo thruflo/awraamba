@@ -12,13 +12,15 @@
 from pyramid.config import Configurator
 from sqlalchemy import engine_from_config
 
+from pyramid.authentication import RemoteUserAuthenticationPolicy
 from pyramid.request import Request
 from pyramid.view import AppendSlashNotFoundViewFactory
 from pyramid_assetgen import AssetGenRequestMixin
 from pyramid_beaker import session_factory_from_settings
 
 from .model import Session
-from .views import add_visited_cookie, not_found_view
+from .views import add_visited_cookie, get_is_authenticated, get_user
+from .views import not_found_view
 
 # Mapping of route names to patterns.
 route_mapping = (
@@ -33,8 +35,11 @@ def factory(global_config, **settings):
     engine = engine_from_config(settings, 'sqlalchemy.')
     Session.configure(bind=engine)
     
-    # Include and configure external libraries.
-    config = Configurator(settings=settings)
+    # Initialise the ``Configurator`` with authentication policy.
+    auth_policy = RemoteUserAuthenticationPolicy()
+    config = Configurator(settings=settings, authentication_policy=auth_policy)
+    
+    # Include external libraries.
     config.include('pyramid_assetgen')
     config.include('pyramid_weblayer')
     
@@ -44,6 +49,10 @@ def factory(global_config, **settings):
     
     config.set_request_factory(CustomRequest)
     config.set_session_factory(session_factory_from_settings(settings))
+    
+    # Add ``is_authenticated`` and ``user`` properties to the request.
+    config.set_request_property(get_is_authenticated, 'is_authenticated', reify=True)
+    config.set_request_property(get_user, 'user', reify=True)
     
     # Tell the translation machinery where the message strings are.
     config.add_translation_dirs(settings['locale_dir'])
@@ -71,6 +80,16 @@ def factory(global_config, **settings):
     # and any included packages.
     config.scan()
     
+    # Fake authentication for now.
+    class AuthenticationMiddleware:
+        def __init__(self, app):
+            self.app = app
+        
+        def __call__(self, environ, start_response):
+            environ['REMOTE_USER'] = '1'
+            return self.app(environ, start_response)
+        
+    
     # Return a configured WSGI application.
-    return config.make_wsgi_app()
+    return AuthenticationMiddleware(config.make_wsgi_app())
 

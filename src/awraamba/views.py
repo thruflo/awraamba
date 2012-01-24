@@ -12,11 +12,27 @@ import logging
 from pyramid.events import subscriber, NewResponse
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.view import view_config, view_defaults
+from pyramid.security import unauthenticated_userid
 from pyramid_weblayer.view import BaseView
 #from webob.exc import status_map, HTTPBadRequest, HTTPNotFound, HTTPForbidden
 
 from .mail import PostmarkMailer
-from awraamba import mail, model, schema
+from awraamba import model, schema
+
+def get_is_authenticated(request):
+    """Get the user for the request."""
+    
+    user_id = unauthenticated_userid(request)
+    unauthenticated = user_id is None
+    return not unauthenticated
+
+def get_user(request):
+    """Get the user for the request."""
+    
+    user_id = unauthenticated_userid(request)
+    if user_id is not None:
+        return model.User.get_by_id(user_id)
+
 
 @subscriber(NewResponse)
 def add_visited_cookie(event):
