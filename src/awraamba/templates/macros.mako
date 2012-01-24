@@ -28,7 +28,7 @@
     <%
       attrs_str = ''
       for k, v in attrs.iteritems():
-          attrs_str += ' %s="%s"' % (k, v)
+          attrs_str += ' %s=%s' % (k, v)
     %>
     <form ${attrs_str.strip()}>
       <input type="hidden" name="csrf_token" value="${request.session.get_csrf_token()}" />
@@ -61,7 +61,7 @@
 <%def name="_input(input_type, name, id=None, value=None, label=None, context_=None)">
   <%
     label = label and label or name.title()
-    id = id and id or name
+    id = id and id or name.replace('_', '-')
     if value is None:
         value = request.params.get(name, getattr(context_, name, ''))
     is_error = errors and name in errors
@@ -72,11 +72,11 @@
     <div class="input">
       <input id="${id}" name="${name}" class="${error_class}" type="${input_type}"
           % if value:
-            value="${escape(value)}"
+            value="${value | h}"
           % endif
       />
       % if is_error:
-        <span class="help-inline">${escape(_(errors[name]))}</span>
+        <span class="help-inline">${_(errors[name]) | h}</span>
       % endif
     </div>
   </div>
@@ -90,6 +90,39 @@
   ${self._input('password', name, id=id, label=label, context_=context_)}
 </%def>
 
+<%def name="hidden_input(name, id=None, value=None, context_=None)">
+  <%
+    id = id and id or name.replace('_', '-')
+    if value is None:
+        value = request.params.get(name, getattr(context_, name, ''))
+  %>
+  <input id="${id}" name="${name}" type="hidden"
+      % if value:
+        value="${value | h}"
+      % endif
+  />
+</%def>
+
+<%def name="textarea(name, id=None, label=None, value=None, context_=None)">
+  <%
+    label = label and label or name.title()
+    id = id and id or name.replace('_', '-')
+    if value is None:
+        value = request.params.get(name, getattr(context_, name, ''))
+    is_error = errors and name in errors
+    error_class = is_error and 'error' or ''
+  %>
+  <div class="clearfix ${error_class}">
+    <label for="${name}">${_(label)}</label>
+    <div class="input">
+      <textarea id="${id}" name="${name}" class="${error_class}">${value | h}</textarea>
+      % if is_error:
+        <span class="help-inline">${_(errors[name]) | h}</span>
+      % endif
+    </div>
+  </div>
+</%def>
+
 <!-- 
   
   Form actions.
@@ -98,7 +131,7 @@
 -->
 
 <%def name="_action(input_type, value, is_primary=True)">
-  <input type="${input_type}" class="btn ${is_primary and 'primary' or ''}" value="${escape(value)}" />
+  <input type="${input_type}" class="btn ${is_primary and 'primary' or ''}" value="${value | h}" />
 </%def>
 
 <%def name="submit_action(value, is_primary=True)">

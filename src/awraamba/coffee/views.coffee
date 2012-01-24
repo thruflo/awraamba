@@ -111,6 +111,66 @@ define 'views', (exports, root) ->
     defaults:
       extensions: ['mp4', 'ogv', 'webm']
       videos_path: 'http://videos.mozilla.org/serv/webmademovies/'
+    events:
+      'click #react-btn'        : 'enable_react_mode'
+      'click #watch-btn'        : 'enable_watch_mode'
+      'submit #react-form'      : 'submit_reaction'
+    # Two utility functions to convert seconds into a formated time string,
+    # e.g.: from ``64`` into ``01:04``.
+    _get2dstr: (n) ->
+      s = if n < 10 then '0' + n else '' + n
+      s.substring 0, 2
+    
+    _getmmss: (s) =>
+      m = 0
+      if s >= 60
+        m = parseInt(s / 60)
+        s -= m * 60
+      return @_get2dstr(m) + ':' + @_get2dstr(s)
+    
+    # Update the current time input with the current time value.
+    render_current_time: =>
+      current_time = @player.currentTime()
+      @current_time_input.attr 'data-value', current_time
+      @current_time_input.val @_getmmss current_time
+    
+    # Toggle modes.
+    enable_react_mode: =>
+      console.log 'XXX enable react mode'
+      @player.pause()
+      @react_btn.hide()
+      @watch_btn.show()
+      @react_ui.show()
+      @video.bind 'timeupdate', @render_current_time
+      @render_current_time()
+      false
+    
+    enable_watch_mode: =>
+      console.log 'XXX enable watch mode'
+      @video.unbind 'timeupdate', @render_current_time
+      @react_ui.hide()
+      @watch_btn.hide()
+      @react_btn.show()
+      @player.play()
+      false
+    
+    # Handle the form submission.
+    submit_reaction: =>
+      # Swap the mm:ss and the secs values around for a moment.
+      _current_value = @current_time_input.val()
+      @current_time_input.val @current_time_input.attr 'data-value'
+      # Get the form data.
+      slug_param = '&theme_slug=' + @model.get 'value'
+      data = @react_form.serialize() + slug_param
+      # Swap the mm:ss back in.
+      @current_time_input.val _current_value
+      $.ajax
+        type: 'POST'
+        url: @react_form.attr 'action'
+        data: data
+        success: (data) -> console.log 'submitted OK!'
+        dataType: 'json'
+      false
     
     render: =>
       theme = @model.get 'value'
@@ -138,10 +198,18 @@ define 'views', (exports, root) ->
       @bind 'hide', => $target.hide()
       @bind 'show', => $target.show()
       # Initialise Popcorn.js player.
+      @video = @$ "#theme-video"
       @player = Popcorn "#theme-video"
+      @player.controls true
       @player.media.autoplay = true
       # Get a handle on the <source /> elements.
       @sources = @$ '#theme-video > source'
+      # Get a handle on the react controls.
+      @react_btn = @$ '#react-btn'
+      @watch_btn = @$ '#watch-btn'
+      @react_ui = @$ '#react-ui'
+      @react_form = @$ '#react-form'
+      @current_time_input = @$ '#current-time'
       # Pause and play on before hide and after show.
       @bind 'beforehide', => @player.pause()
       @bind 'aftershow', => @player.play()
