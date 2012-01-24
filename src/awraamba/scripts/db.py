@@ -14,7 +14,7 @@ from ..model import *
 def usage(argv):
     """Print usage instructions and exit."""
     
-    cmd = os.path.basename(argv[0])
+    cmd = basename(argv[0])
     print('usage: %s <config_uri>\n'
           '(example: "%s development.ini")' % (cmd, cmd)) 
     sys.exit(1)
