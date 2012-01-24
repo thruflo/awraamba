@@ -21,18 +21,12 @@ import logging
 
 from sqlalchemy import desc, event
 from sqlalchemy import Column, ForeignKey, Table
-from sqlalchemy import Boolean, Integer, Unicode, UnicodeText
+from sqlalchemy import BigInteger, Boolean, Integer, Numeric, Unicode, UnicodeText
 from sqlalchemy.orm import backref, relationship
 
 from basemodel import Session, SQLModel
 from basemodel import AuthMixin, BaseMixin, SearchMixin, SlugMixin
 
-t_reacts = Table(
-    't_reacts',
-    SQLModel.metadata,
-    Column('theme_id', Integer, ForeignKey('themes.id')),
-    Column('reaction_id', Integer, ForeignKey('reactions.id'))
-)
 t_chars = Table(
     't_chars',
     SQLModel.metadata,
@@ -92,7 +86,9 @@ class Theme(SQLModel, BaseMixin, SearchMixin, SlugMixin):
     title = Column(Unicode)
     description = Column(UnicodeText)
     
-    reactions = relationship("Reaction", secondary=t_reacts, backref='themes')
+    # Many reactions to one theme.
+    reactions = relationship("Reaction", backref='theme')
+    
     characters = relationship("Character", secondary=t_chars, backref='themes')
     locations = relationship("Location", secondary=t_locs, backref='themes')
     
@@ -127,16 +123,21 @@ class Location(SQLModel, BaseMixin, SearchMixin, SlugMixin):
 
 class Reaction(SQLModel, BaseMixin, SearchMixin):
     """Encapsulates a user generated comment or external link.  Has implicit
-      ``user``, ``themes``, ``characters`` and ``locations`` relations.
+      ``user``, ``theme``, ``characters`` and ``locations`` relations.
       
       ``parent_id`` is set when the reaction is in reply to another reaction.
       ``children`` is a reaction's list of replies.
     """
     
+    
     url = Column(Unicode)
     message = Column(UnicodeText)
     
+    theme_id = Column(Integer, ForeignKey('themes.id'))
+    current_time = Column(Numeric)
+    
     user_id = Column(Integer, ForeignKey('users.id'))
+    
     parent_id = Column(Integer, ForeignKey('reactions.id'))
     children = relationship("Reaction", lazy='eager')
     
