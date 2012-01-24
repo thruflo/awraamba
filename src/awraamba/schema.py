@@ -29,6 +29,9 @@ from .model import User
 id_pattern = r'\d+'
 valid_id = re.compile(r'^%s$' % id_pattern, re.U)
 
+slug_pattern = r'[\w]{1,20}'
+valid_slug = re.compile(r'^%s$' % slug_pattern, re.U)
+
 username_pattern = r'[.\w-]{1,32}'
 valid_username = re.compile(r'^%s$' % username_pattern, re.U)
 
@@ -48,6 +51,30 @@ def _(msg):
 class Id(validators.Int):
     """Ids must be valid integers.
     """
+    
+
+class Slug(validators.UnicodeString):
+    """A valid slug."""
+    
+    messages = {
+        'invalid': _(u'No spaces, no funny chars, upto 20 characters long.')
+    }
+    
+    def _to_python(self, value, state):
+        value = super(Slug, self)._to_python(value, state)
+        return value.strip().lower()
+        
+    
+    
+    def validate_python(self, value, state):
+        super(Slug, self).validate_python(value, state)
+        if not valid_slug.match(value):
+            raise validators.Invalid(
+                self.message("invalid", state),
+                value,
+                state
+            )
+        
     
 
 class Username(validators.UnicodeString):
@@ -454,4 +481,42 @@ class Login(formencode.Schema):
     password = RawPassword(not_empty=True)
     next = RequestPath()
     
+
+
+### AwraAmba Specifics
+
+# XXX put this somewhere.
+VALID_CONTEXT_TYPES = [
+    'character',
+    'location',
+    'reaction',
+    'theme',
+    'user'
+]
+class ContextType(validators.UnicodeString):
+    """Must be a valid model class name."""
+    
+    messages = {'invalid': _(u'Invalid context type.')}
+    
+    def validate_python(self, value, state):
+        super(ContextType, self).validate_python(value, state)
+        if not value in VALID_CONTEXT_TYPES:
+            raise validators.Invalid(
+                self.message("invalid", state),
+                value,
+                state
+            )
+        
+    
+
+
+class ContextData(formencode.Schema):
+    context_id = Id(not_empty=True)
+    context_type = ContextType(not_empty=True)
+
+class AddReaction(formencode.Schema):
+    theme_slug = Slug(not_empty=True)
+    current_time = validators.Number(not_empty=True)
+    url = validators.URL(add_http=True)
+    message = validators.UnicodeString()
 

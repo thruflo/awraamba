@@ -24,6 +24,7 @@ from .views import not_found_view
 
 # Mapping of route names to patterns.
 route_mapping = (
+    ('reactions', '/api/reactions/'),
     ('app', '/*path'),
 )
 
