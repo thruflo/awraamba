@@ -3,7 +3,7 @@ define 'templates', (exports, root) ->
   
   exports.thread_content = mobone.string.template """
     <div class="theme-<%- theme_slug %>">
-      <a href="/scarf/<%- id %>" class="thread"><span><span></span></span></a>
+      <a href="/scarf/<%- reaction_id %>" class="thread"><span><span></span></span></a>
       <div class="reaction-info">
         <p>
           <span class="by-user">

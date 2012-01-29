@@ -236,7 +236,7 @@ define 'views', (exports, root) ->
           while true
             thread = @current_threads.at @next_thread_index
             if thread? and thread.get('timecode') < @current_time
-              @rendered_threads.add thread
+              @rendered_threads.add thread.toJSON()
               @next_thread_index += 1
             else
               break
@@ -292,6 +292,7 @@ define 'views', (exports, root) ->
       @current_time = 0
       @next_thread_index = 0
       if reactions?
+        @rendered_threads.each (m) -> m.view.remove()
         @rendered_threads.reset()
         @current_threads.reset reactions
     
@@ -324,11 +325,15 @@ define 'views', (exports, root) ->
           # Get reactions for this theme using AJAX.
           data = theme_slug: theme
           $.getJSON '/api/reactions/', data, (reactions) =>
+            # XXX we have to *not* use an id, to avoid "adding the same model to
+            # a collection twice", for some strange Backbine reason.
+            for item in reactions
+              item['reaction_id'] = item['id']
+              delete item['id']
             @reset reactions
             @player.load()
             @play_when_ready timecode
         else
-          @reset()
           @play_when_ready timecode
     
     initialize: ->
@@ -359,7 +364,9 @@ define 'views', (exports, root) ->
         el: '#thread-listings'
         collection: @rendered_threads
       # Pause and play on before hide and after show.
-      @bind 'beforehide', => @player.pause()
+      @bind 'beforehide', => 
+        @player.currentTime 0
+        @player.pause()
       @bind 'aftershow', => @player.play()
       # Bind to theme changes and render.
       @model.bind 'change', @render
