@@ -360,6 +360,10 @@ define 'views', (exports, root) ->
         collection: @rendered_threads
       # Pause and play on before hide and after show.
       @bind 'beforehide', => 
+        # XXX rewind on hide seems to feel more natural.  Need to silently
+        # set the model to 0 to make sure links to the current pos work.
+        attrs = value: 0
+        @model.set attrs, silent: true
         @player.currentTime 0
         @player.pause()
       @bind 'aftershow', => @player.play()
