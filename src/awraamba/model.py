@@ -134,7 +134,7 @@ class Reaction(SQLModel, BaseMixin, SearchMixin):
     message = Column(UnicodeText)
     
     theme_id = Column(Integer, ForeignKey('themes.id'))
-    current_time = Column(Numeric)
+    timecode = Column(Numeric)
     
     user_id = Column(Integer, ForeignKey('users.id'))
     

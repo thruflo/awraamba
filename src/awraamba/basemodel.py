@@ -15,6 +15,7 @@ __all__ = [
 
 import logging
 from datetime import datetime
+from decimal import Decimal
 
 from passlib.apps import custom_app_context as pwd_context
 from sqlalchemy import create_engine, desc, or_
@@ -93,6 +94,8 @@ class BaseMixin(object):
             v = getattr(self, k)
             if isinstance(v, datetime):
                 v = v.isoformat()
+            elif isinstance(v, Decimal):
+                v = float(v)
             elif hasattr(v, '__json__'):
                 v = v.__json__()
             else:

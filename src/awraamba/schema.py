@@ -511,12 +511,11 @@ class ContextType(validators.UnicodeString):
 
 
 class ContextData(formencode.Schema):
-    context_id = Id(not_empty=True)
-    context_type = ContextType(not_empty=True)
+    theme_slug = Slug(not_empty=True)
 
 class AddReaction(formencode.Schema):
     theme_slug = Slug(not_empty=True)
-    current_time = validators.Number(not_empty=True)
+    timecode = validators.Number(not_empty=True)
     url = validators.URL(add_http=True)
     message = validators.UnicodeString()
 
