@@ -10,9 +10,6 @@
 [submodule "third_party/backbone"]
 	path = third_party/backbone
 	url = git://github.com/documentcloud/backbone.git
-[submodule "third_party/mobone"]
-	path = third_party/mobone
-	url = git://github.com/thruflo/mobone.git
 [submodule "third_party/jslibs"]
 	path = third_party/jslibs
 	url = git://github.com/tav/jslibs.git
