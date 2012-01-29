@@ -13,7 +13,6 @@ from pyramid.events import subscriber, NewResponse
 from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound, HTTPForbidden
 from pyramid.view import view_config, view_defaults
 from pyramid.security import unauthenticated_userid
-from pyramid_weblayer.view import BaseView
 
 from .mail import PostmarkMailer
 from awraamba import model, schema
@@ -40,68 +39,63 @@ def add_visited_cookie(event):
     event.response.set_cookie('visited', 'true', max_age=3628800)
 
 
-@view_defaults(route_name='app')
-class AppView(BaseView):
+@view_config(route_name='app', renderer='app.mako', request_method='GET')
+def app_view(request):
     """Render the main client application."""
     
-    @view_config(renderer='app.mako')
-    def get(self):
-        is_first_time = not self.request.cookies.get('visited', False)
-        return {'is_first_time': is_first_time}
+    is_first_time = not request.cookies.get('visited', False)
+    return {'is_first_time': is_first_time}
+
+
+# permission='authenticated'
+@view_config(route_name='reactions', renderer='json', request_method='POST')
+def post_reaction_view(request):
+    """Add a new reaction."""
+    
+    p = request.params
+    data = {
+        'theme_slug': p.get('theme_slug'),
+        'timecode': p.get('timecode'),
+        'url': p.get('url'),
+        'message': p.get('message')
+    }
+    try:
+        data = schema.AddReaction.to_python(data)
+    except formencode.Invalid as err:
+        logging.warning(err)
+        request.response.status = 400
+        return err.unpack_errors()
+    else:
+        theme = model.Theme.get_by_slug(data['theme_slug'])
+        if theme is None:
+            raise HTTPNotFound
+        data.pop('theme_slug')
+        data['theme_id'] = theme.id
+        data['user_id'] = request.user.id,
+        reaction = model.Reaction(**data)
+        model.Session.add(reaction)
+        return {}
     
 
 
-@view_config(route_name='reactions', renderer='json', attr='__call__')
-class ReactionsView(BaseView):
-    """Reactions container."""
+@view_config(route_name='reactions', renderer='json', request_method='GET')
+def get_reactions_view(request):
+    """Return a list of reactions for a theme."""
     
-    # permission='authenticated'
-    def post(self):
-        """Create a new reaction."""
-        
-        p = self.request.params
-        data = {
-            'theme_slug': p.get('theme_slug'),
-            'current_time': p.get('current_time'),
-            'url': p.get('url'),
-            'message': p.get('message')
-        }
-        try:
-            data = schema.AddReaction.to_python(data)
-        except formencode.Invalid as err:
-            logging.warning(err)
-            self.request.response.status = 400
-            return err.unpack_errors()
-        else:
-            theme = model.Theme.get_by_slug(data['theme_slug'])
-            if theme is None:
-                raise HTTPNotFound
-            data.pop('theme_slug')
-            data['theme_id'] = theme.id
-            data['user_id'] = self.request.user.id,
-            reaction = model.Reaction(**data)
-            model.Session.add(reaction)
-            return {}
-    
-    def get(self):
-        """Return a list of reactions for the context provided."""
-        
-        p = self.request.params
-        data = {
-            'context_type': p.get('context_type'),
-            'context_id': p.get('context_id')
-        }
-        try:
-            data = schema.ContextData.to_python(data)
-        except formencode.Invalid as err:
-            logging.warning(err)
-            raise HTTPBadRequest
-        else:
-            context_cls = getattr(model, data['context_type'].title())
-            context = context_cls.get_by_id(data['context_id'])
-            return context.reactions
-        
-    
+    p = request.params
+    data = {
+        'theme_slug': p.get('theme_slug')
+    }
+    try:
+        data = schema.ContextData.to_python(data)
+    except formencode.Invalid as err:
+        logging.warning(err)
+        raise HTTPBadRequest
+    else:
+        theme = model.Theme.get_by_slug(data['theme_slug'])
+        if theme is None:
+            raise HTTPNotFound
+        return [item.__json__() for item in theme.reactions]
 
 
 def not_found_view(context, request):
