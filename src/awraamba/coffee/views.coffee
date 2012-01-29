@@ -269,7 +269,7 @@ define 'views', (exports, root) ->
       _current_value = @current_time_input.val()
       @current_time_input.val @current_time_input.attr 'data-value'
       # Get the form data.
-      slug_param = '&theme_slug=' + @model.get 'value'
+      slug_param = '&theme_slug=' + @model.get('value').split('/')[0]
       data = @react_form.serialize() + slug_param
       # Swap the mm:ss back in.
       @current_time_input.val _current_value
