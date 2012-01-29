@@ -155,24 +155,20 @@ define 'views', (exports, root) ->
   class ThreadListingsView extends Backbone.View
     # When a thread is added, render it at the top of the listings.
     handle_add: (model) =>
-      console.log "ThreadListingsView.handle_add", model
       view = new ThreadView model: model
       $(@el).prepend(view.el)
     
     # When a thread is removed, remove it from the listings.
     handle_remove: (model_or_models) =>
-      console.log "ThreadListingsView.handle_remove", model_or_models
       if model_or_models instanceof Backbone.Model
         models = [model_or_models]
       else
         models = model_or_models
       for model in models
-        console.log 'remove', model
         model.view.remove()
     
     # When the listings are reset, render the new threads.
     handle_reset: (models) =>
-      console.log "ThreadListingsView.handle_reset", models
       $(@el).empty()
       models.each @handle_add
     
@@ -283,7 +279,6 @@ define 'views', (exports, root) ->
         data: data
         dataType: 'json'
         success: (data) =>
-          console.log data
           # Insert and highlight the thread.
           @current_threads.add data
           @rendered_threads.add data
@@ -333,7 +328,6 @@ define 'views', (exports, root) ->
             @player.load()
             @play_when_ready timecode
         else
-          console.log 'has not changed'
           @reset()
           @play_when_ready timecode
     

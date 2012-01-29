@@ -16,9 +16,7 @@ define 'app', (exports, root) ->
       new ViewClass el: el, model: model
     
     _get_or_create: (view_name) ->
-      console.log 'BaseController._get_or_create'
       if not (view_name of @_views)
-        console.log 'Does not exist', view_name
         @_views[view_name] = @_create_view view_name
       @_views[view_name]
     
@@ -78,27 +76,21 @@ define 'app', (exports, root) ->
       '*path'                         : 'notfound'
     # Handler methods.
     intro: =>
-      console.log 'Controller.intro'
       @_show 'intro_view'
     
     explore: (location) =>
-      console.log "Controller.explore #{location}"
       @_show 'explore_view', (view) => view.model.set 'value', location
     
     watch: =>
-      console.log "Controller.watch"
       @_show 'watch_view'
     
     theme: (theme) =>
-      console.log "Controller.theme #{theme}"
       @_show 'theme_view', (view) => view.model.set 'value', theme
     
     interact: (reaction) =>
-      console.log "Controller.interact #{reaction}"
       @_show 'interact_view', (view) => view.model.set 'value', reaction
     
     profile: (username) =>
-      console.log "Controller.profile #{username}"
       @_show 'profile_view', (view) => view.model.set 'value', username
     
     notfound: (path) => @navigate '/', trigger: true, replace: true
