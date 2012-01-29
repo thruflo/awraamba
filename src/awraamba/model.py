@@ -132,11 +132,10 @@ class Reaction(SQLModel, BaseMixin, SearchMixin):
     
     url = Column(Unicode)
     message = Column(UnicodeText)
-    
-    theme_id = Column(Integer, ForeignKey('themes.id'))
     timecode = Column(Numeric)
     
-    user_id = Column(Integer, ForeignKey('users.id'))
+    theme_slug = Column(Unicode, ForeignKey('themes.slug'))
+    user_username = Column(Unicode, ForeignKey('users.username'))
     
     parent_id = Column(Integer, ForeignKey('reactions.id'))
     children = relationship("Reaction", lazy='eager')

@@ -87,6 +87,8 @@
     </div>
     <div id="main-content" class="container-fluid">
       ${next.body()}
+      <div class="clear">
+      </div>
       <footer>
         <p>&copy; 2011 Write This Down Productions Ltd.</p>
       </footer>

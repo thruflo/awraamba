@@ -1,7 +1,19 @@
+// **Variables**
+
+// width of the video player and the scarf threads.
+$video_width: 512px
+
+// theme colours.
+$gender-color: red
+
+// **Styles**
+
 body, html
   width: 100%
   height: 100%
-  /*overflow: hidden*/
+
+.clear
+  clear: both
 
 #main-content
   margin-top: 40px
@@ -11,9 +23,11 @@ body, html
   visibility: hidden
   position: absolute
   margin: 0px -20px -20px
+  overflow: hidden
 
 #intro-view, #watch-view, #theme-view, #interact-view
   display: none
+  min-height: 728px
 
 #theme-video-container
   width: 80%
@@ -21,8 +35,38 @@ body, html
   text-align: center
 
 #theme-video
-  width: 512px
+  width: $video_width
 
-#watch-btn, #react-ui
+#watch-react-btns-container
+  width: 100%
+
+#watch-btn, #react-ui, .reaction-info
   display: none
+
+#thread-listings, #react-ui, #threads-ui
+  width: $video_width
+  margin: auto
+
+#thread-listings
+  list-style: none
+  margin: 0px
+  padding: 0px
+
+a.thread, a.thread > span, a.thread > span > span
+  width: $video_width
+  float: left
+
+a.thread
+  margin: 0px 2px
+  clear: both
+
+a.thread > span
+  padding: 2px 0px
+  height: 4px
+
+a.thread > span > span
+  height: 2px
+
+.theme-gender a.thread > span > span
+  background-color: $gender-color
 

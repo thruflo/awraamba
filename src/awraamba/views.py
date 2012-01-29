@@ -69,13 +69,10 @@ def post_reaction_view(request):
         theme = model.Theme.get_by_slug(data['theme_slug'])
         if theme is None:
             raise HTTPNotFound
-        data.pop('theme_slug')
-        data['theme_id'] = theme.id
-        data['user_id'] = request.user.id,
+        data['user_username'] = request.user.username
         reaction = model.Reaction(**data)
         model.Session.add(reaction)
-        return {}
-    
+        return reaction.__json__()
 
 
 @view_config(route_name='reactions', renderer='json', request_method='GET')

@@ -6,8 +6,10 @@
       <source></source>
       <source></source>
     </video>
-    <a href="react" id="react-btn" class="btn">${_(u'React')} &raquo;</a>
-    <a href="watch" id="watch-btn" class="btn">&laquo; ${_(u'Watch')}</a>
+    <div id="watch-react-btns-container">
+      <a href="react" id="react-btn" class="btn">${_(u'React')} &raquo;</a>
+      <a href="watch" id="watch-btn" class="btn">&laquo; ${_(u'Watch')}</a>
+    </div>
   </div>
   <div id="react-ui">
     <h2>${_(u'React')}</h2>

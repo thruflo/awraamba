@@ -1,6 +1,23 @@
 # ...
 define 'views', (exports, root) ->
   
+  # Two utility functions to convert seconds into a formated time string,
+  # e.g.: from `64` into `"01:04"`.
+  Number::toTwoDigitString = ->
+    n = this
+    s = if n < 10 then '0' + n else '' + n
+    s.substring 0, 2
+  
+  Number::toMMSS = ->
+    s = this
+    m = 0
+    if s >= 60
+      m = parseInt(s / 60)
+      s -= m * 60
+    s = Math.round s
+    m.toTwoDigitString() + ':' + s.toTwoDigitString()
+  
+  
   # `Resizer` binds to throttled window resize events to resize ``@el`` to
   # the viewport dimensions.
   class Resizer extends Backbone.View
@@ -114,7 +131,11 @@ define 'views', (exports, root) ->
     tagName: 'li'
     className: 'thread'
     render: ->
-      $(@el).text JSON.stringify @model
+      # Insert the markup for this thread.
+      $target = $ @el
+      $target.html templates.thread_content @model.toJSON()
+      # Toggle the reaction info on thread click.
+      @$('a.thread').click -> $(this).next().slideToggle 'normal'
     
     initialize: ->
       @model.view = this
@@ -127,7 +148,7 @@ define 'views', (exports, root) ->
     handle_add: (model) =>
       console.log "ThreadListingsView.handle_add", model
       view = new ThreadView model: model
-      $(@el).append(view.el)
+      $(@el).prepend(view.el)
     
     # When a thread is removed, remove it from the listings.
     handle_remove: (model_or_models) =>
@@ -140,7 +161,7 @@ define 'views', (exports, root) ->
         console.log 'remove', model
         model.view.remove()
     
-    # When the listings are reset, remove the current and add the new threads.
+    # When the listings are reset, render the new threads.
     handle_reset: (models) =>
       console.log "ThreadListingsView.handle_reset", models
       $(@el).empty()
@@ -169,20 +190,7 @@ define 'views', (exports, root) ->
     previous_time: null
     current_time: 0
     next_thread_index: 0
-    # Two utility functions to convert seconds into a formated time string,
-    # e.g.: from ``64`` into ``01:04``.
-    _get2dstr: (n) ->
-      s = if n < 10 then '0' + n else '' + n
-      s.substring 0, 2
-    
-    _getmmss: (s) =>
-      m = 0
-      if s >= 60
-        m = parseInt(s / 60)
-        s -= m * 60
-      s = Math.round s
-      return @_get2dstr(m) + ':' + @_get2dstr(s)
-    
+    was_playing: false
     # Control which threads are rendered based on the current time and update
     # the timecode input with the current time value.
     handle_time_update: =>
@@ -217,11 +225,11 @@ define 'views', (exports, root) ->
         # If in react mode, render the current time.
         if @react_mode
           @current_time_input.attr 'data-value', @current_time
-          @current_time_input.val @_getmmss @current_time
+          @current_time_input.val @current_time.toMMSS()
     
     # Toggle modes.
     enable_react_mode: =>
-      console.log 'XXX enable react mode'
+      @was_playing = true # XXX this is assumed in the absence of a playstate
       @player.pause()
       @react_btn.hide()
       @watch_btn.show()
@@ -230,13 +238,12 @@ define 'views', (exports, root) ->
       false
     
     enable_watch_mode: =>
-      console.log 'XXX enable watch mode'
-      @video.unbind 'timeupdate', @render_current_time
       @react_mode = false
       @react_ui.hide()
       @watch_btn.hide()
       @react_btn.show()
-      @player.play()
+      if @was_playing
+        @player.play()
       false
     
     # Handle the form submission.
@@ -253,9 +260,23 @@ define 'views', (exports, root) ->
         type: 'POST'
         url: @react_form.attr 'action'
         data: data
-        success: (data) -> console.log 'submitted OK!'
         dataType: 'json'
+        success: (data) =>
+          console.log data
+          # Insert and highlight the thread.
+          @current_threads.add data
+          @rendered_threads.add data
+          @next_thread_index += 1
+          @$('li.thread:first').highlight()
       false
+    
+    reset: (reactions) =>
+      @was_playing = false
+      @previous_time = null
+      @current_time = 0
+      @next_thread_index = 0
+      @rendered_threads.reset()
+      @current_threads.reset reactions
     
     render: =>
       theme = @model.get 'value'
@@ -277,8 +298,7 @@ define 'views', (exports, root) ->
           # Get reactions for this theme using AJAX.
           data = theme_slug: theme
           $.getJSON '/api/reactions/', data, (reactions) =>
-            @rendered_threads.reset()
-            @current_threads.reset reactions
+            @reset reactions
             @player.load()
         @player.play()
     
