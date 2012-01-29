@@ -511,7 +511,8 @@ class ContextType(validators.UnicodeString):
 
 
 class ContextData(formencode.Schema):
-    theme_slug = Slug(not_empty=True)
+    theme_slug = Slug()
+    by_username = Username()
 
 class AddReaction(formencode.Schema):
     theme_slug = Slug(not_empty=True)

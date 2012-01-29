@@ -3,7 +3,7 @@ define 'templates', (exports, root) ->
   
   exports.thread_content = mobone.string.template """
     <div class="theme-<%- theme_slug %>">
-      <a href="/reactions/<%- id %>" class="thread"><span><span></span></span></a>
+      <a href="/scarf/<%- id %>" class="thread"><span><span></span></span></a>
       <div class="reaction-info">
         <p>
           <span class="by-user">
@@ -13,7 +13,7 @@ define 'templates', (exports, root) ->
           <span class="by-user">
             <% if (typeof(parent_id) != "undefined" && parent_id) { %>
               <%= i18n._('in response to') %> 
-              @<a href="/reactions/<%= parent_id %>"><%= parent_user_username %></a>
+              @<a href="/scarf/<%= parent_id %>"><%= parent_user_username %></a>
             <% } %>
             <%= i18n._('reacting to') %>
             <a href="/themes/<%- encodeURIComponent(theme_slug) %>/<%- encodeURIComponent(timecode) %>">

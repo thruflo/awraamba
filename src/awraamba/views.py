@@ -77,11 +77,14 @@ def post_reaction_view(request):
 
 @view_config(route_name='reactions', renderer='json', request_method='GET')
 def get_reactions_view(request):
-    """Return a list of reactions for a theme."""
+    """Return a list of reactions.  ATM, this is a pretty naive implementation
+      that either gets all the reactions for a theme, or all the reactions
+      full stop.  That's not really viable in production...
+    """
     
-    p = request.params
     data = {
-        'theme_slug': p.get('theme_slug')
+        'theme_slug': request.params.get('theme_slug', None),
+        'by_username': request.params.get('by_username', None)
     }
     try:
         data = schema.ContextData.to_python(data)
@@ -89,10 +92,19 @@ def get_reactions_view(request):
         logging.warning(err)
         raise HTTPBadRequest
     else:
-        theme = model.Theme.get_by_slug(data['theme_slug'])
-        if theme is None:
-            raise HTTPNotFound
-        return [item.__json__() for item in theme.reactions]
+        if data['theme_slug']:
+            theme = model.Theme.get_by_slug(data['theme_slug'])
+            if theme is None:
+                raise HTTPNotFound
+            reactions = theme.reactions
+        elif data['by_username']:
+            user = model.User.get_by('username', data['by_username'])
+            if user is None:
+                raise HTTPNotFound
+            reactions = user.reactions
+        else:
+            reactions = model.Reaction.query.all()
+        return [item.__json__() for item in reactions]
 
 
 def not_found_view(context, request):

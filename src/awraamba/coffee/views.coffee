@@ -124,7 +124,14 @@ define 'views', (exports, root) ->
   
   # `ReactionsCollection` keeps reactions in timecode order.
   class ReactionsCollection extends Backbone.Collection
-    comparator: (m) -> m.get 'timecode'
+    # XXX sort is by slug:mmss:timecode:created.  This needs to reflect the
+    # themes sort order, i.e.: which order do we want the themes on the page,
+    # as opposed to just using slug.  This may require back end tweaks to
+    # return the theme_sort_order or some such in the reaction JSON.
+    comparator: (m) -> 
+      tc = m.get 'timecode'
+      "#{m.get 'theme_slug'}:#{tc.toMMSS()}:#{tc}:#{m.get 'c'}"
+    
   
   # `ThreadView` renders an individual thread.
   class ThreadView extends Backbone.View
@@ -365,16 +372,24 @@ define 'views', (exports, root) ->
       @render()
     
   
-  # ...
+  # Render the interactive scarf.
   class InteractView extends Backbone.View
-    render: ->
-      # ...
+    # XXX the logic here is pretty primitive: we'll need to re-implement when the
+    # scraf design is developed, e.g.: to handle new reactions, how we want to
+    # display individual reactions, infinite scroll, etc.
+    render: =>
+      $.getJSON '/api/reactions/', (reactions) => @threads.reset reactions
     
     initialize: ->
+      @model.set 'value', NaN
       @model.bind 'change', @render
       $target = $ @el
       @bind 'afterhide', => $target.hide()
       @bind 'beforeshow', => $target.show()
+      @threads = new ReactionsCollection
+      @thread_listings = new ThreadListingsView
+        el: '#scarf-listings'
+        collection: @threads
     
   
   exports.Resizer = Resizer
