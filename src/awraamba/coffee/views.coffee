@@ -325,11 +325,6 @@ define 'views', (exports, root) ->
           # Get reactions for this theme using AJAX.
           data = theme_slug: theme
           $.getJSON '/api/reactions/', data, (reactions) =>
-            # XXX we have to *not* use an id, to avoid "adding the same model to
-            # a collection twice", for some strange Backbine reason.
-            for item in reactions
-              item['reaction_id'] = item['id']
-              delete item['id']
             @reset reactions
             @player.load()
             @play_when_ready timecode

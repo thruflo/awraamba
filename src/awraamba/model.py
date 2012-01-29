@@ -129,6 +129,23 @@ class Reaction(SQLModel, BaseMixin, SearchMixin):
       ``children`` is a reaction's list of replies.
     """
     
+    __public__ = [
+        'c', 
+        'm', 
+        'message', 
+        'parent_id', 
+        'reaction_id',
+        'theme_slug',
+        'timecode', 
+        'url', 
+        'user_username',
+        'v'
+    ]
+    
+    @property
+    def reaction_id(self):
+        return self.id
+    
     
     url = Column(Unicode)
     message = Column(UnicodeText)
@@ -140,7 +157,6 @@ class Reaction(SQLModel, BaseMixin, SearchMixin):
     parent_id = Column(Integer, ForeignKey('reactions.id'))
     children = relationship("Reaction", lazy='eager')
     
-
 
 # bind searchable class create events to ``target._setup_search()``.
 for model_class in (Character, Location, Reaction, Theme, User):
