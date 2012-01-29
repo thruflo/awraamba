@@ -74,7 +74,8 @@ define 'app', (exports, root) ->
       'themes/*theme'                 : 'theme'
       'scarf'                         : 'interact'
       'scarf/:reaction'               : 'interact'
-      ':user'                         : 'profile'
+      'users/:username'               : 'profile'
+      '*path'                         : 'notfound'
     # Handler methods.
     intro: =>
       console.log 'Controller.intro'
@@ -96,6 +97,11 @@ define 'app', (exports, root) ->
       console.log "Controller.interact #{reaction}"
       @_show 'interact_view', (view) => view.model.set 'value', reaction
     
+    profile: (username) =>
+      console.log "Controller.profile #{username}"
+      @_show 'profile_view', (view) => view.model.set 'value', username
+    
+    notfound: (path) => @navigate '/', trigger: true, replace: true
   
   # `main()` application entry point.  Call it to start the javascript.
   exports.main = ->

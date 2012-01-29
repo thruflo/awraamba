@@ -392,10 +392,34 @@ define 'views', (exports, root) ->
         collection: @threads
     
   
+  # Render the user's profile info and their activity.
+  class ProfileView extends Backbone.View
+    render: =>
+      @threads.reset()
+      username = @model.get 'value'
+      md5_hash = Crypto.MD5 username.toLowerCase(), asString: true
+      @title.text "@#{username}'s Profile"
+      @avatar.attr 'src', '//www.gravatar.com/avatar/' + md5_hash
+      $.getJSON '/api/reactions/', (reactions) => @threads.reset reactions
+    
+    initialize: ->
+      @model.bind 'change', @render
+      $target = $ @el
+      @title = @$ '#profile-title'
+      @avatar = @$ '#profile-avatar'
+      @bind 'afterhide', => $target.hide()
+      @bind 'beforeshow', => $target.show()
+      @threads = new ReactionsCollection
+      @thread_listings = new ThreadListingsView
+        el: '#profile-listings'
+        collection: @threads
+    
+  
   exports.Resizer = Resizer
   exports.IntroView = IntroView
   exports.ExploreView = ExploreView
   exports.WatchView = WatchView
   exports.ThemeView = ThemeView
   exports.InteractView = InteractView
+  exports.ProfileView = ProfileView
 
