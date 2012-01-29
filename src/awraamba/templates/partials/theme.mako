@@ -15,7 +15,7 @@
         attrs = dict(action='/api/reactions/', method='post', id='react-form'),
         fields = (
             ('hidden_input', 'theme_id'),
-            ('text_input', 'current_time'),
+            ('text_input', 'timecode'),
             ('text_input', 'url'),
             ('textarea', 'message'),
         ),
@@ -23,5 +23,9 @@
             ('submit_action', _(u'React')),
         )
     )}
+  </div>
+  <div id="threads-ui">
+    <ul id="thread-listings">
+    </ul>
   </div>
 </div>
