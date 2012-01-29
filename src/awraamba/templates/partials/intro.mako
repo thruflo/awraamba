@@ -1,4 +1,4 @@
-<div id="intro-view">
+<div id="intro-view" class="relative-view">
   <div id="intro-video-container">
     <video height="288" width="512" id="intro-video">
       <source src="http://videos.mozilla.org/serv/webmademovies/popcorntest.mp4"></source>

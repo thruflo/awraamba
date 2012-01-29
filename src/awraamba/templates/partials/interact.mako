@@ -1,4 +1,4 @@
-<div id="interact-view">
+<div id="interact-view" class="relative-view">
   <h4>
     Lorum ipsum... text here that explains how adding reactions to the documentary
     contributes to the interactive scarf below and how the interactive scarf

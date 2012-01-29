@@ -1,4 +1,4 @@
-<div id="watch-view">
+<div id="watch-view" class="relative-view">
   <br />
   <br />
   <br />

@@ -1,5 +1,5 @@
 <%namespace name="macros" file="../macros.mako"/>
-<div id="theme-view">
+<div id="theme-view" class="relative-view">
   <div id="theme-video-container">
     <video id="theme-video">
       <source></source>

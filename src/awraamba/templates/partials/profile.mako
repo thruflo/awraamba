@@ -1,4 +1,4 @@
-<div id="profile-view">
+<div id="profile-view" class="relative-view">
   <img id="profile-avatar" />
   <h4 id="profile-title">
   </h4>
