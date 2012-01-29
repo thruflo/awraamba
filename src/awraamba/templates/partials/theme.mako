@@ -26,8 +26,8 @@
         )
     )}
   </div>
-  <div id="threads-ui">
-    <ul id="thread-listings">
+  <div id="threads-ui" class="threads-ui">
+    <ul id="thread-listings" class="threads-listing">
     </ul>
   </div>
 </div>

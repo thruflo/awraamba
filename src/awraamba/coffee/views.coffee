@@ -135,7 +135,9 @@ define 'views', (exports, root) ->
       $target = $ @el
       $target.html templates.thread_content @model.toJSON()
       # Toggle the reaction info on thread click.
-      @$('a.thread').click -> $(this).next().slideToggle 'normal'
+      @$('a.thread').click ->
+        $(this).next().slideToggle 'normal'
+        false
     
     initialize: ->
       @model.view = this
@@ -165,8 +167,7 @@ define 'views', (exports, root) ->
     handle_reset: (models) =>
       console.log "ThreadListingsView.handle_reset", models
       $(@el).empty()
-      for model in models
-        @handle_add(model)
+      models.each @handle_add
     
     initialize: ->
       @collection.bind 'add', @handle_add
@@ -191,6 +192,20 @@ define 'views', (exports, root) ->
     current_time: 0
     next_thread_index: 0
     was_playing: false
+    # If we want to seek to a position, we need the player to be ready.
+    play_when_ready: (timecode) ->
+      if timecode
+        if @player.readyState() > 1
+          @player.currentTime timecode
+          @player.play()
+        else
+          @player.listen 'canplay', => 
+            @player.unlisten 'canplay'
+            @player.currentTime timecode
+            @player.play()
+      else
+        @player.play()
+    
     # Control which threads are rendered based on the current time and update
     # the timecode input with the current time value.
     handle_time_update: =>
@@ -222,10 +237,9 @@ define 'views', (exports, root) ->
               @next_thread_index += 1
             else
               break
-        # If in react mode, render the current time.
-        if @react_mode
-          @current_time_input.attr 'data-value', @current_time
-          @current_time_input.val @current_time.toMMSS()
+        # Render the current time.
+        @current_time_input.attr 'data-value', @current_time
+        @current_time_input.val @current_time.toMMSS()
     
     # Toggle modes.
     enable_react_mode: =>
@@ -275,12 +289,22 @@ define 'views', (exports, root) ->
       @previous_time = null
       @current_time = 0
       @next_thread_index = 0
-      @rendered_threads.reset()
-      @current_threads.reset reactions
+      if reactions?
+        @rendered_threads.reset()
+        @current_threads.reset reactions
     
     render: =>
       theme = @model.get 'value'
       if theme?
+        # `theme` can be a slug like `gender` or a slug and a timecode, e.g.:
+        # `gender/12.134`.
+        parts = theme.split '/'
+        theme = parts[0]
+        timecode = 0
+        if parts.length > 1
+          timecode_str = parts[1]
+          if parseFloat(timecode_str).toString() is timecode_str
+            timecode = parseFloat timecode_str
         # Set srcs.
         path = @options.videos_path
         exts = @options.extensions
@@ -300,7 +324,11 @@ define 'views', (exports, root) ->
           $.getJSON '/api/reactions/', data, (reactions) =>
             @reset reactions
             @player.load()
-        @player.play()
+            @play_when_ready timecode
+        else
+          console.log 'has not changed'
+          @reset()
+          @play_when_ready timecode
     
     initialize: ->
       _.defaults @options, @defaults

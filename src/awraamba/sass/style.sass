@@ -43,11 +43,11 @@ body, html
 #watch-btn, #react-ui, .reaction-info
   display: none
 
-#thread-listings, #react-ui, #threads-ui
+.threads-listing, #react-ui, .threads-ui
   width: $video_width
   margin: auto
 
-#thread-listings
+.threads-listing
   list-style: none
   margin: 0px
   padding: 0px
@@ -59,6 +59,9 @@ a.thread, a.thread > span, a.thread > span > span
 a.thread
   margin: 0px 2px
   clear: both
+
+a.thread:focus
+  outline: none
 
 a.thread > span
   padding: 2px 0px

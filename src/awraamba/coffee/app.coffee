@@ -71,7 +71,7 @@ define 'app', (exports, root) ->
       'explore'                       : 'explore'
       'explore/:location'             : 'explore'
       'themes'                        : 'watch'
-      'themes/:theme'                 : 'theme'
+      'themes/*theme'                 : 'theme'
       'scarf'                         : 'interact'
       'scarf/:reaction'               : 'interact'
       ':user'                         : 'profile'
