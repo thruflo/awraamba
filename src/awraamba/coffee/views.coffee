@@ -279,11 +279,11 @@ define 'views', (exports, root) ->
         data: data
         dataType: 'json'
         success: (data) =>
-          # Insert and highlight the thread.
+          # Insert and XXX highlight the thread.
           @current_threads.add data
           @rendered_threads.add data
           @next_thread_index += 1
-          @$('li.thread:first').highlight()
+          #@$('li.thread:first').highlight()
       false
     
     reset: (reactions) =>
