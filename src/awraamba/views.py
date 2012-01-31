@@ -6,6 +6,7 @@
 #import datetime
 import formencode
 import logging
+import json
 #import urllib
 
 #from pyramid.response import Response
@@ -13,6 +14,8 @@ from pyramid.events import subscriber, NewResponse
 from pyramid.httpexceptions import HTTPBadRequest, HTTPNotFound, HTTPForbidden
 from pyramid.view import view_config, view_defaults
 from pyramid.security import unauthenticated_userid
+
+from pyramid_assetgen import IAssetGenManifest
 
 from .mail import PostmarkMailer
 from awraamba import model, schema
@@ -43,8 +46,12 @@ def add_visited_cookie(event):
 def app_view(request):
     """Render the main client application."""
     
+    # XXX this way of getting the data is a temporary hack only.
+    manifest = request.registry.getUtility(IAssetGenManifest, 'awraamba:assets/')
+    manifest_data = json.dumps(manifest._data)
+    
     is_first_time = not request.cookies.get('visited', False)
-    return {'is_first_time': is_first_time}
+    return {'is_first_time': is_first_time, 'manifest_data': manifest_data}
 
 
 # permission='authenticated'

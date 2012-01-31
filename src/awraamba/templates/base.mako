@@ -96,14 +96,6 @@
     % if not is_ajax:
       <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js">
       </script>
-      <script type="text/javascript">
-        window.message_strings = {};
-        window.static_urls = {};
-        window.awraamba = {};
-        window.awraamba['template_variables'] = {
-          'is_first_time': ${is_first_time and "true" or "false"}
-        };
-      </script>
       <script type="text/javascript" src="${request.static_url('awraamba:tour/tour.js')}">
       </script>
       <script type="text/javascript" src="${request.static_url('awraamba:assets/base.js')}">
@@ -111,6 +103,12 @@
       <script type="text/javascript" src="${request.static_url('awraamba:assets/client.js')}">
       </script>
       <script type="text/javascript">
+        window.awraamba = {};
+        window.awraamba['template_variables'] = {
+          'is_first_time': ${is_first_time and "true" or "false"}
+        };
+        // Setup the static urls.
+        assetgen.add_manifest('/static', ${manifest_data | n});
         // Start the client application running.
         $(document).ready(
           function () {

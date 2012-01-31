@@ -4,7 +4,6 @@
     <video id="theme-video">
       <source></source>
       <source></source>
-      <source></source>
     </video>
     <div id="watch-react-btns-container">
       <a href="react" id="react-btn" class="btn">${_(u'React')} &raquo;</a>

@@ -43,6 +43,10 @@ generate:
       
     
 
+- videos/*:
+    source: ../var/videos/*
+    type: binary
+
 - gfx/*:
     source: ../src/awraamba/gfx/*
     type: binary

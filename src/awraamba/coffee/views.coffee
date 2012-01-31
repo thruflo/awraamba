@@ -183,8 +183,8 @@ define 'views', (exports, root) ->
   # to control which threads should be rendered below the video.
   class ThemeView extends Backbone.View
     defaults:
-      extensions: ['mp4', 'ogv', 'webm']
-      videos_path: 'http://videos.mozilla.org/serv/webmademovies/'
+      extensions: ['mp4', 'webm'] # 'ogv'
+      videos_path: '/static/videos/'
     events:
       'click #react-btn'        : 'enable_react_mode'
       'click #watch-btn'        : 'enable_watch_mode'
@@ -315,9 +315,7 @@ define 'views', (exports, root) ->
         @sources.each (i) -> 
           $source = $ this
           existing_src = $source.attr 'src'
-          # XXX fake sources for now using mozilla sources
-          _theme = if theme is 'gender' then 'thankyou' else 'popcorntest'
-          new_src = "#{path}#{_theme}.#{exts[i]}"
+          new_src = assetgen.static_path "#{path}#{theme}.#{exts[i]}"
           if new_src isnt existing_src
             $source.attr 'src', new_src
             has_changed = true
